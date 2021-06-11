@@ -1,0 +1,44 @@
+package com.example.quizz.ui.fragments
+
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.example.quizz.R
+import com.example.quizz.databinding.FragmentLoginBinding
+import com.example.quizz.databinding.FragmentRegisterBinding
+
+class LoginFragment : Fragment() {
+
+    private var registerButtonListener : (() -> Unit)? = null
+    private var changePasswordListener : (() -> Unit)? = null
+    private lateinit var binding: FragmentLoginBinding
+
+    fun setUpRegisterButtonListener(listener: (() -> Unit)){
+        this.registerButtonListener = listener
+    }
+
+    fun setUpChangePasswordListener(listener: (() -> Unit)){
+        this.changePasswordListener = listener
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentLoginBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.switchToRegisterButton.setOnClickListener{
+            Log.v("asdasd","aasdasd")
+            registerButtonListener?.invoke()
+        }
+        binding.forgotPasswordTv.setOnClickListener{
+            //changePasswordFragment
+            //changePasswordListener?.invoke()
+        }
+    }
+}

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Quizz</string>
+<!--    <string name="header_q"><![CDATA[<b><font color=#D359A1>Q</font></b>]]></string>-->
+    <string name="header">Quizz</string>
+    <string name="intro">New here? Please create your account before you move on.</string>
+    <string name="registration">Registration</string>
+    <string name="register">Register me!</string>
+    <string name="login">Login</string>>
+    <string name="already_exist">Already have account?</string>>
+    <string name="forgot_password">Can\'t remember password?</string>
+    <string name="doesnt_exist">Don\'t have account?</string>
+    <string name="hello">Hello!</string>
+    <string name="welcome_back">Welcome back!</string>
+    <string name="welcome">We are glad you are back, give your info  and let’s play!</string>
+</resources>
