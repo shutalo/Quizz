@@ -16,7 +16,7 @@
         android:background="@color/header_color">
 
         <ImageView
-            android:id="@+id/headerTextView"
+            android:id="@+id/header_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/header"
@@ -55,7 +55,7 @@
         app:layout_constraintTop_toBottomOf="@id/header_layout"/>
 
     <TextView
-        android:id="@+id/intro_TextView"
+        android:id="@+id/intro_tv"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="@string/intro"
@@ -73,7 +73,7 @@
         android:layout_marginLeft="10dp"
         android:textSize="18sp"
         app:layout_constraintLeft_toRightOf="@id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@id/intro_TextView" />
+        app:layout_constraintTop_toBottomOf="@id/intro_tv" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_input"

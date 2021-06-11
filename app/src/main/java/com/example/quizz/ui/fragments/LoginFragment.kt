@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import com.example.quizz.R
 import com.example.quizz.databinding.FragmentLoginBinding
 import com.example.quizz.databinding.FragmentRegisterBinding
+import com.example.quizz.ui.viewmodels.RegisterViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class LoginFragment : Fragment() {
+class LoginFragment() : Fragment() {
 
     private var registerButtonListener : (() -> Unit)? = null
     private var changePasswordListener : (() -> Unit)? = null
@@ -37,8 +39,7 @@ class LoginFragment : Fragment() {
             registerButtonListener?.invoke()
         }
         binding.forgotPasswordTv.setOnClickListener{
-            //changePasswordFragment
-            //changePasswordListener?.invoke()
+            changePasswordListener?.invoke()
         }
     }
 }

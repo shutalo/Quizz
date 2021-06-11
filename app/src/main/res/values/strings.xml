@@ -12,4 +12,11 @@
     <string name="hello">Hello!</string>
     <string name="welcome_back">Welcome back!</string>
     <string name="welcome">We are glad you are back, give your info  and let’s play!</string>
+    <string name="who_are_you">Who are you?</string>
+    <string name="pick_username">Pick something cool! Be original.</string>
+    <string name="choose_username">Choose your username</string>
+    <string name="change_password_title">Don\'t forget!</string>
+    <string name="change_password_intro">Next time pick something you cant forget.</string>
+    <string name="change_password_description">Can\'t remember my password</string>
+    <string name="change_password_new_password">I want new password!</string>
 </resources>
