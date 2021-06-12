@@ -33,18 +33,15 @@ class RegisterFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.registerButton.setOnClickListener{
-            checkIfRegistrationIsPossible()
+            viewModel.register(binding.email.text.toString(),binding.password.text.toString())
         }
         binding.switchToLoginButton.setOnClickListener{
             loginListener?.invoke()
         }
-        viewModel.isRegistrationPossible.observe(viewLifecycleOwner) {
+        viewModel.isRegistrationSuccessful.observe(viewLifecycleOwner) {
             if(it){ registerListener?.invoke() }
         }
 
     }
 
-    private fun checkIfRegistrationIsPossible() {
-        viewModel.register(binding.email.text.toString(),binding.password.text.toString())
-    }
 }

@@ -14,8 +14,10 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class LoginFragment() : Fragment() {
 
+    private val viewModel by sharedViewModel<RegisterViewModel>()
     private var registerButtonListener : (() -> Unit)? = null
     private var changePasswordListener : (() -> Unit)? = null
+    private var loginButtonListener : (() -> Unit)? = null
     private lateinit var binding: FragmentLoginBinding
 
     fun setUpRegisterButtonListener(listener: (() -> Unit)){
@@ -24,6 +26,10 @@ class LoginFragment() : Fragment() {
 
     fun setUpChangePasswordListener(listener: (() -> Unit)){
         this.changePasswordListener = listener
+    }
+
+    fun setUpLoginButtonListener(listener: (() -> Unit)){
+        this.loginButtonListener = listener
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,11 +41,19 @@ class LoginFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.switchToRegisterButton.setOnClickListener{
-            Log.v("asdasd","aasdasd")
             registerButtonListener?.invoke()
         }
         binding.forgotPasswordTv.setOnClickListener{
             changePasswordListener?.invoke()
+        }
+        binding.loginButton.setOnClickListener{
+            viewModel.signIn(binding.email.text.toString(),binding.password.text.toString())
+        }
+
+        viewModel.isSigningInSuccessful.observe(viewLifecycleOwner){
+            if(it){
+                loginButtonListener?.invoke()
+            }
         }
     }
 }

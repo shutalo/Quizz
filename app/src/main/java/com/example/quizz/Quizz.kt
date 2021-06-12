@@ -20,4 +20,5 @@ class Quizz : Application() {
         lateinit var context : Quizz
             private set
     }
+
 }

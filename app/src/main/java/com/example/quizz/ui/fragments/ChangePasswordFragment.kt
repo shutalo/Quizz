@@ -27,7 +27,9 @@ class ChangePasswordFragment : Fragment() {
             viewModel.changePassword(binding.email.text.toString())
         }
         viewModel.isPasswordChanged.observe(viewLifecycleOwner){
-            listener?.invoke()
+            if(it){
+                listener?.invoke()
+            }
         }
     }
 

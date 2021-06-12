@@ -11,6 +11,7 @@ import org.koin.android.ext.android.bind
 class ChooseUsernameFragment : Fragment() {
 
     private lateinit var binding: FragmentChooseUsernameBinding
+    private var listener: (()->Unit)? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentChooseUsernameBinding.inflate(layoutInflater)
@@ -22,6 +23,11 @@ class ChooseUsernameFragment : Fragment() {
 
         binding.chooseUsernameButton.setOnClickListener{
             //finish registering and open main screen
+            listener?.invoke()
         }
+    }
+
+    fun setUpChooseUsernameButtonListener(listener: ()->Unit){
+        this.listener = listener
     }
 }
