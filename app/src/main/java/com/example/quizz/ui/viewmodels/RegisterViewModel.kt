@@ -1,20 +1,14 @@
 package com.example.quizz.ui.viewmodels
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quizz.Quizz
-import com.example.quizz.repository.FirebaseRepository
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.firebase.auth.FirebaseAuth
+import com.example.quizz.data.repository.Repository
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 
-class RegisterViewModel(private val firebaseRepository: FirebaseRepository) : ViewModel() {
+class RegisterViewModel(private val repository: Repository) : ViewModel() {
 
     private val TAG = "RegisterViewModel"
 
@@ -30,7 +24,7 @@ class RegisterViewModel(private val firebaseRepository: FirebaseRepository) : Vi
 
     fun register(email: String, password: String){
         viewModelScope.launch {
-           _isRegistrationSuccessful.postValue(firebaseRepository.register(email,password))
+           _isRegistrationSuccessful.postValue(repository.register(email,password))
         }
     }
 
@@ -41,16 +35,18 @@ class RegisterViewModel(private val firebaseRepository: FirebaseRepository) : Vi
 
     fun signIn(email: String, password: String){
         viewModelScope.launch {
-            _isSigningInSuccessful.postValue(firebaseRepository.signIn(email,password))
+            _isSigningInSuccessful.postValue(repository.signIn(email,password))
         }
     }
 
     fun checkIfUserIsSignedIn() {
-        _isUserSignedIn.postValue(firebaseRepository.checkIfUserIsSignedIn())
+        viewModelScope.launch {
+            _isUserSignedIn.postValue(repository.checkIfUserIsSignedIn())
+        }
     }
 
     fun getCurrentUser(): FirebaseUser{
-        return firebaseRepository.getCurrentUser()
+        return repository.getCurrentUser()
     }
 
     fun chooseUsername(){

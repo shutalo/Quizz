@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.quizz.Quizz
 import com.example.quizz.R
 import com.example.quizz.databinding.ActivityWelcomeBinding
 import com.example.quizz.ui.fragments.ChangePasswordFragment
@@ -29,10 +30,9 @@ class WelcomeActivity :  AppCompatActivity() {
         setContentView(R.layout.activity_welcome)
         this.supportActionBar?.hide()
 
-        startMainActivity()
+        Log.d(TAG,"Started")
 
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, loginFragment).commit()
 
         registerFragment.setUpLoginButtonListener {
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container,loginFragment).commit()
@@ -60,13 +60,14 @@ class WelcomeActivity :  AppCompatActivity() {
             if(it){
                 Log.d(TAG,viewModel.getCurrentUser().toString())
                 startMainActivity()
+            } else {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, loginFragment).commit()
             }
         }
     }
 
     private fun startMainActivity(){
-        val intent: Intent = Intent(this,MainActivity::class.java)
-        //mozda izmjenit da ne salje firebase user nego moju klasu usera
+        val intent: Intent = Intent(Quizz.context,MainActivity::class.java)
         //intent.putExtra("user",viewModel.getCurrentUser().toString())
         startActivity(intent)
     }

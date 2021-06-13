@@ -1,15 +1,13 @@
-package com.example.quizz.repository
+package com.example.quizz.utils
 
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.viewModelScope
 import com.example.quizz.Quizz
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.launch
 
-class FirebaseRepository {
-    private val TAG = "FirebaseRepository"
+class FirebaseService {
+    private val TAG = "FirebaseService"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     fun register(email: String, password: String): Boolean{
@@ -47,12 +45,8 @@ class FirebaseRepository {
     }
 
     fun checkIfUserIsSignedIn() : Boolean {
-        val currentUser :FirebaseUser? = mAuth.currentUser
+        val currentUser : FirebaseUser? = mAuth.currentUser
         return currentUser != null
-    }
-
-    fun chooseUsername(){
-        //check if selected username is available and add it to database
     }
 
     fun getCurrentUser(): FirebaseUser {
