@@ -76,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@id/intro_tv" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email_input"
+        android:id="@+id/email_input_layout"
         style="@style/myOutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_input"
+        android:id="@+id/password_input_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
         app:endIconMode="password_toggle"
         app:layout_constraintLeft_toRightOf="@id/leftGuideline"
         app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/email_input"
+        app:layout_constraintTop_toBottomOf="@id/email_input_layout"
         android:layout_margin="8dp"
         android:hint="Password"
         android:textColorHint ="@color/white"
@@ -138,7 +138,7 @@
         android:layout_height="50dp"
         app:layout_constraintLeft_toRightOf="@id/leftGuideline"
         app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/password_input"
+        app:layout_constraintTop_toBottomOf="@id/password_input_layout"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="10dp"

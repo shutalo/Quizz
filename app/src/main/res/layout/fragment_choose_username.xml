@@ -75,7 +75,7 @@
         app:layout_constraintTop_toBottomOf="@id/intro_tv" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/username_input"
+        android:id="@+id/username_input_layout"
         style="@style/myOutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
         android:layout_height="50dp"
         app:layout_constraintLeft_toRightOf="@id/leftGuideline"
         app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/username_input"
+        app:layout_constraintTop_toBottomOf="@id/username_input_layout"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="10dp"

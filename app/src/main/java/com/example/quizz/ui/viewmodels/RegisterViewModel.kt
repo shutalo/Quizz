@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quizz.data.model.User
 import com.example.quizz.data.repository.Repository
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
@@ -20,6 +21,8 @@ class RegisterViewModel(private val repository: Repository) : ViewModel() {
     var isUserSignedIn: LiveData<Boolean> = _isUserSignedIn
     private var _isSigningInSuccessful: MutableLiveData<Boolean> = MutableLiveData(false)
     var isSigningInSuccessful: LiveData<Boolean> = _isSigningInSuccessful
+    private var _isUsernameChosen: MutableLiveData<Boolean> = MutableLiveData(false)
+    var isUsernameChosen: LiveData<Boolean> = _isUsernameChosen
 
 
     fun register(email: String, password: String){
@@ -28,9 +31,10 @@ class RegisterViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun changePassword(newPassword: String){
-        //change password
-        _isPasswordChanged.postValue(true)
+    fun changePassword(email: String){
+        viewModelScope.launch {
+            _isPasswordChanged.postValue(repository.changePassword(email))
+        }
     }
 
     fun signIn(email: String, password: String){
@@ -49,8 +53,14 @@ class RegisterViewModel(private val repository: Repository) : ViewModel() {
         return repository.getCurrentUser()
     }
 
-    fun chooseUsername(){
-        //check if selected username is available and add it to database
+    fun getCurrentUserObject(): User?{
+        return repository.getCurrentUserObject()
+    }
+
+    fun chooseUsername(username: String){
+        viewModelScope.launch {
+            _isUsernameChosen.postValue(repository.chooseUsername(username))
+        }
     }
 
 }

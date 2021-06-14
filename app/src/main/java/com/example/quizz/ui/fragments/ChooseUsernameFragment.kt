@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.quizz.databinding.FragmentChooseUsernameBinding
+import com.example.quizz.ui.viewmodels.RegisterViewModel
 import org.koin.android.ext.android.bind
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ChooseUsernameFragment : Fragment() {
 
+    private val viewModel by sharedViewModel<RegisterViewModel>()
     private lateinit var binding: FragmentChooseUsernameBinding
     private var listener: (()->Unit)? = null
 
@@ -22,8 +25,13 @@ class ChooseUsernameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.chooseUsernameButton.setOnClickListener{
-            //finish registering and open main screen
-            listener?.invoke()
+            viewModel.chooseUsername(binding.username.text.toString())
+        }
+
+        viewModel.isUsernameChosen.observe(viewLifecycleOwner){
+            if(it){
+                listener?.invoke()
+            }
         }
     }
 

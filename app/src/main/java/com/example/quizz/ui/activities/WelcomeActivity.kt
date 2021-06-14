@@ -68,7 +68,7 @@ class WelcomeActivity :  AppCompatActivity() {
 
     private fun startMainActivity(){
         val intent: Intent = Intent(Quizz.context,MainActivity::class.java)
-        //intent.putExtra("user",viewModel.getCurrentUser().toString())
+        intent.putExtra("user",viewModel.getCurrentUserObject())
         startActivity(intent)
     }
 

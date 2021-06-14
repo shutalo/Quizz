@@ -1,21 +1,17 @@
 package com.example.quizz.data.repository
 
 import android.util.Log
-import android.widget.Toast
-import com.example.quizz.Quizz
 import com.example.quizz.data.database.RemoteDatabase
+import com.example.quizz.data.model.User
 import com.example.quizz.utils.FirebaseService
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
 
 class Repository(private val firebaseDatabase: RemoteDatabase, private val firebaseService: FirebaseService) {
+
+    private val TAG = "Repository"
+
     fun register(email: String, password: String): Boolean{
         return firebaseService.register(email,password)
-    }
-
-    fun changePassword(newPassword: String){
-        //change password
     }
 
     fun signIn(email: String, password: String): Boolean{
@@ -26,15 +22,28 @@ class Repository(private val firebaseDatabase: RemoteDatabase, private val fireb
         return firebaseService.checkIfUserIsSignedIn()
     }
 
-    fun chooseUsername(){
-        //check if selected username is available and add it to database
-    }
-
     fun getCurrentUser(): FirebaseUser {
         return firebaseService.getCurrentUser()
     }
 
     fun signOut(){
         firebaseService.signOut()
+    }
+
+    fun changePassword(email: String): Boolean{
+        return firebaseService.changePassword(email)
+    }
+
+    fun chooseUsername(username: String): Boolean{
+        return if (firebaseDatabase.checkIfUsernameIsAvailable(username)){
+            firebaseDatabase.chooseUsername(username,firebaseService.getCurrentUser())
+            true
+        } else {
+            false
+        }
+    }
+
+    fun getCurrentUserObject(): User?{
+        return firebaseDatabase.getCurrentUserObject(firebaseService.getCurrentUser())
     }
 }

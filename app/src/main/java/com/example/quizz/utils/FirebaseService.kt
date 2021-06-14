@@ -24,10 +24,6 @@ class FirebaseService {
         return registrationSuccessful
     }
 
-    fun changePassword(newPassword: String){
-        //change password
-    }
-
     fun signIn(email: String, password: String): Boolean{
         var signingSuccessful: Boolean = false
         if(email != "" && password != ""){
@@ -44,6 +40,10 @@ class FirebaseService {
         return signingSuccessful
     }
 
+    fun signOut(){
+        mAuth.signOut()
+    }
+
     fun checkIfUserIsSignedIn() : Boolean {
         val currentUser : FirebaseUser? = mAuth.currentUser
         return currentUser != null
@@ -53,7 +53,12 @@ class FirebaseService {
         return mAuth.currentUser!!
     }
 
-    fun signOut(){
-        mAuth.signOut()
+    fun changePassword(email: String): Boolean{
+        var isPasswordChangeRequested = false
+        if(email == mAuth.currentUser?.email){
+            mAuth.sendPasswordResetEmail(email)
+            isPasswordChangeRequested = true
+        }
+        return isPasswordChangeRequested
     }
 }
