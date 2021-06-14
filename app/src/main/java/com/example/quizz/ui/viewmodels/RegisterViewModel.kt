@@ -1,22 +1,23 @@
 package com.example.quizz.ui.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.*
 import com.example.quizz.data.model.User
 import com.example.quizz.data.repository.Repository
+import com.example.quizz.ui.activities.WelcomeActivity
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(private val repository: Repository) : ViewModel() {
 
     private val TAG = "RegisterViewModel"
 
-    private var _isRegistrationSuccessful: MutableLiveData<Boolean> = MutableLiveData(false)
-    var isRegistrationSuccessful: LiveData<Boolean> = _isRegistrationSuccessful
-    private var _isPasswordChanged: MutableLiveData<Boolean> = MutableLiveData(false)
-    var isPasswordChanged: LiveData<Boolean> = _isPasswordChanged
+    private var _isUserRegisteredSuccessfully: MutableLiveData<Boolean> = MutableLiveData(false)
+    var isUserRegisteredSuccessfully: LiveData<Boolean> = _isUserRegisteredSuccessfully
+    private var _isPasswordChangeRequested: MutableLiveData<Boolean> = MutableLiveData(false)
+    var isPasswordChangeRequested: LiveData<Boolean> = _isPasswordChangeRequested
     private var _isUserSignedIn: MutableLiveData<Boolean> = MutableLiveData(false)
     var isUserSignedIn: LiveData<Boolean> = _isUserSignedIn
     private var _isSigningInSuccessful: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -27,19 +28,19 @@ class RegisterViewModel(private val repository: Repository) : ViewModel() {
 
     fun register(email: String, password: String){
         viewModelScope.launch {
-           _isRegistrationSuccessful.postValue(repository.register(email,password))
-        }
-    }
-
-    fun changePassword(email: String){
-        viewModelScope.launch {
-            _isPasswordChanged.postValue(repository.changePassword(email))
+           _isUserRegisteredSuccessfully.postValue(repository.register(email,password))
         }
     }
 
     fun signIn(email: String, password: String){
         viewModelScope.launch {
-            _isSigningInSuccessful.postValue(repository.signIn(email,password))
+           _isSigningInSuccessful.postValue(repository.signIn(email,password))
+        }
+    }
+
+    fun changePassword(email: String){
+        viewModelScope.launch {
+            _isPasswordChangeRequested.postValue(repository.changePassword(email))
         }
     }
 

@@ -37,25 +37,33 @@ class WelcomeActivity :  AppCompatActivity() {
         registerFragment.setUpLoginButtonListener {
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container,loginFragment).commit()
         }
-        registerFragment.setUpRegisterButtonListener {
-            supportFragmentManager.beginTransaction().replace(R.id.fragment_container,chooseUsernameFragment).commit()
-        }
         loginFragment.setUpRegisterButtonListener {
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container, registerFragment).commit()
         }
         loginFragment.setUpChangePasswordListener {
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container,changePasswordFragment).commit()
         }
-        loginFragment.setUpLoginButtonListener {
-            startMainActivity()
-        }
-        changePasswordFragment.setUpChangePasswordListener {
-            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, loginFragment).commit()
-        }
-        chooseUsernameFragment.setUpChooseUsernameButtonListener {
-            startMainActivity()
-        }
 
+        viewModel.isUsernameChosen.observe(this){
+            if(it){
+                startMainActivity()
+            }
+        }
+        viewModel.isPasswordChangeRequested.observe(this){
+            if(it) {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, loginFragment)
+            }
+        }
+        viewModel.isUserRegisteredSuccessfully.observe(this){
+            if(it){
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container,chooseUsernameFragment).commit()
+            }
+        }
+        viewModel.isSigningInSuccessful.observe(this){
+            if(it){
+                startMainActivity()
+            }
+        }
         viewModel.isUserSignedIn.observe(this){
             if(it){
                 Log.d(TAG,viewModel.getCurrentUser().toString())

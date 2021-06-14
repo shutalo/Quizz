@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.quizz.databinding.FragmentRegisterBinding
+import com.example.quizz.ui.activities.WelcomeActivity
 import com.example.quizz.ui.viewmodels.RegisterViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -19,10 +20,6 @@ class RegisterFragment() : Fragment() {
     fun setUpLoginButtonListener(listener: (() -> Unit)){
         this.loginListener = listener
     }
-    fun setUpRegisterButtonListener(listener: (() -> Unit)){
-        this.registerListener = listener
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentRegisterBinding.inflate(layoutInflater)
@@ -31,15 +28,11 @@ class RegisterFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.registerButton.setOnClickListener{
             viewModel.register(binding.email.text.toString(),binding.password.text.toString())
         }
         binding.switchToLoginButton.setOnClickListener{
             loginListener?.invoke()
-        }
-        viewModel.isRegistrationSuccessful.observe(viewLifecycleOwner) {
-            if(it){ registerListener?.invoke() }
         }
 
     }

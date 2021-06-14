@@ -13,7 +13,6 @@ class ChangePasswordFragment : Fragment() {
 
     private lateinit var binding: FragmentChangePasswordBinding
     private val viewModel by sharedViewModel<RegisterViewModel>()
-    private var listener: (() -> Unit)? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentChangePasswordBinding.inflate(layoutInflater)
@@ -26,14 +25,5 @@ class ChangePasswordFragment : Fragment() {
         binding.changePasswordButton.setOnClickListener{
             viewModel.changePassword(binding.email.text.toString())
         }
-        viewModel.isPasswordChanged.observe(viewLifecycleOwner){
-            if(it){
-                listener?.invoke()
-            }
-        }
-    }
-
-    fun setUpChangePasswordListener(listener: (()->Unit)){
-        this.listener = listener
     }
 }

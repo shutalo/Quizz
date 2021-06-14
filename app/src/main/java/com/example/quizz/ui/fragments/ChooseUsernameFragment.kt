@@ -14,7 +14,6 @@ class ChooseUsernameFragment : Fragment() {
 
     private val viewModel by sharedViewModel<RegisterViewModel>()
     private lateinit var binding: FragmentChooseUsernameBinding
-    private var listener: (()->Unit)? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentChooseUsernameBinding.inflate(layoutInflater)
@@ -28,14 +27,5 @@ class ChooseUsernameFragment : Fragment() {
             viewModel.chooseUsername(binding.username.text.toString())
         }
 
-        viewModel.isUsernameChosen.observe(viewLifecycleOwner){
-            if(it){
-                listener?.invoke()
-            }
-        }
-    }
-
-    fun setUpChooseUsernameButtonListener(listener: ()->Unit){
-        this.listener = listener
     }
 }
