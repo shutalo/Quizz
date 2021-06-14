@@ -13,8 +13,8 @@ class Repository() {
 
     private val TAG = "Repository"
 
-    private val database: FirebaseDatabase = FirebaseDatabase.getInstance("https://quizz-77a0e-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef: DatabaseReference = database.getReference("users")
+    private val database: FirebaseDatabase = FirebaseDatabase.getInstance("https://quizz-77a0e-default-rtdb.europe-west1.firebasedatabase.app")
+    private val myRef: DatabaseReference = database.reference
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     suspend fun register(email: String, password: String): Boolean{
@@ -23,7 +23,9 @@ class Repository() {
             if (it.isSuccessful) {
                 Log.d(TAG, "registered successfully!")
                 Log.d(TAG, myRef.toString())
+                Log.d(TAG, myRef.child("61DyAlB773cnOXZOLC4D64QgzgE3").toString())
                 try{
+                    Log.d(TAG, getCurrentUser().uid.toString())
                     myRef.child(getCurrentUser().uid).child("highScore").setValue(0)
                 } catch (e: Exception){
                     Log.d("WADAWD",e.message.toString())
