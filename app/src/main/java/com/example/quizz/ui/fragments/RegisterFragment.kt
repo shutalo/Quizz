@@ -5,21 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.quizz.R
-import com.example.quizz.databinding.ActivityWelcomeBinding
 import com.example.quizz.databinding.FragmentRegisterBinding
+import com.example.quizz.ui.activities.WelcomeActivity
 import com.example.quizz.ui.viewmodels.RegisterViewModel
-import org.koin.android.ext.android.bind
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class RegisterFragment : Fragment() {
+class RegisterFragment() : Fragment() {
 
-    private var listener : (() -> Unit)? = null
+    private val viewModel by sharedViewModel<RegisterViewModel>()
+    private var loginListener : (() -> Unit)? = null
+    private var registerListener : (() -> Unit)? = null
     private lateinit var binding: FragmentRegisterBinding
-    private val viewModel by viewModel<RegisterViewModel>()
 
-    fun setUpListener(listener: (() -> Unit)){
-        this.listener = listener
+    fun setUpLoginButtonListener(listener: (() -> Unit)){
+        this.loginListener = listener
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -29,13 +28,13 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-            binding.registerButton.setOnClickListener{
-                viewModel.register(binding.email.text.toString(),binding.password.text.toString())
-            }
-            binding.switchToLoginButton.setOnClickListener{
-                listener?.invoke()
-            }
+        binding.registerButton.setOnClickListener{
+            viewModel.register(binding.email.text.toString(),binding.password.text.toString())
+        }
+        binding.switchToLoginButton.setOnClickListener{
+            loginListener?.invoke()
+        }
 
     }
+
 }
