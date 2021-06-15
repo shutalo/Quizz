@@ -1,7 +1,9 @@
 package com.example.quizz.ui.viewmodels
 
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
+import com.example.quizz.Quizz
 import com.example.quizz.data.model.User
 import com.example.quizz.data.repository.Repository
 import com.example.quizz.ui.activities.WelcomeActivity
@@ -28,7 +30,15 @@ class RegisterViewModel(private val repository: Repository) : ViewModel() {
 
     fun register(email: String, password: String){
         viewModelScope.launch {
-           _isUserRegisteredSuccessfully.postValue(repository.register(email,password))
+            if(email != "" && password != "" && email.contains("@") && email.endsWith(".com") && !email.endsWith("@.com")){
+                _isUserRegisteredSuccessfully.postValue(repository.register(email,password))
+            } else {
+                if(password.length < 6){
+                    Toast.makeText(Quizz.context,"Password must contain more than 6 characters!",Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(Quizz.context,"Wrong format.",Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -40,7 +50,8 @@ class RegisterViewModel(private val repository: Repository) : ViewModel() {
 
     fun changePassword(email: String){
         viewModelScope.launch {
-            _isPasswordChangeRequested.postValue(repository.changePassword(email))
+            repository.changePassword(email)
+            _isPasswordChangeRequested.postValue(true)
         }
     }
 
@@ -54,7 +65,7 @@ class RegisterViewModel(private val repository: Repository) : ViewModel() {
         return repository.getCurrentUser()
     }
 
-    fun getCurrentUserObject(): User?{
+    suspend fun getCurrentUserObject(): User?{
         return repository.getCurrentUserObject()
     }
 

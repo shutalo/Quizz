@@ -6,52 +6,56 @@ import com.example.quizz.Quizz
 import com.example.quizz.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import java.util.*
+import kotlin.collections.HashMap
 
 class Repository() {
 
     private val TAG = "Repository"
 
-    private val database: FirebaseDatabase = FirebaseDatabase.getInstance("https://quizz-77a0e-default-rtdb.europe-west1.firebasedatabase.app")
-    private val myRef: DatabaseReference = database.reference
+    private val database: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     suspend fun register(email: String, password: String): Boolean{
         var isRegistrationSuccessful = false
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {
-            if (it.isSuccessful) {
-                Log.d(TAG, "registered successfully!")
-                Log.d(TAG, myRef.toString())
-                Log.d(TAG, myRef.child("61DyAlB773cnOXZOLC4D64QgzgE3").toString())
-                try{
-                    Log.d(TAG, getCurrentUser().uid.toString())
-                    myRef.child(getCurrentUser().uid).child("highScore").setValue(0)
-                } catch (e: Exception){
-                    Log.d("WADAWD",e.message.toString())
+        try {
+            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val highScore = HashMap<String,Int>()
+                    highScore["highScore"] = 0
+                    database.collection("users").document(getCurrentUser().uid).set(highScore)
+                    Log.d(TAG,"User added to database")
+                    isRegistrationSuccessful = true
+                    Toast.makeText(Quizz.context, "Registered successfully!", Toast.LENGTH_SHORT).show()
                 }
-                isRegistrationSuccessful = true
-            }
-        }.addOnFailureListener {
-            Log.d(TAG,it.message.toString())
-            Toast.makeText(Quizz.context, it.message.toString(), Toast.LENGTH_SHORT).show()
-        }.await()
+            }.addOnFailureListener {
+                Log.d(TAG,it.message.toString())
+                Toast.makeText(Quizz.context, it.message.toString(), Toast.LENGTH_SHORT).show()
+            }.await()
+        } catch (e: java.lang.Exception){
+            Log.d(TAG,e.message.toString())
+        }
         return isRegistrationSuccessful
     }
 
     suspend fun signIn(email: String, password: String): Boolean{
-
         var signingSuccessful: Boolean = false
         if(email != "" && password != ""){
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    Log.d(TAG, "signed in successfully!")
-                    signingSuccessful = true
-                }
-            }.addOnFailureListener {
-                Log.d(TAG, it.message.toString())
-                Toast.makeText(Quizz.context, it.message.toString(), Toast.LENGTH_SHORT).show()
-            }.await()
+            try {
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Log.d(TAG, "signed in successfully!")
+                        signingSuccessful = true
+                    }
+                }.addOnFailureListener {
+                    Log.d(TAG, it.message.toString())
+                    Toast.makeText(Quizz.context, it.message.toString(), Toast.LENGTH_SHORT).show()
+                }.await()
+            } catch (e: Exception){
+                Log.d(TAG,e.message.toString())
+            }
         }
         return signingSuccessful
     }
@@ -69,64 +73,36 @@ class Repository() {
         return mAuth.currentUser!!
     }
 
-    fun changePassword(email: String): Boolean{
-        var isPasswordChangeRequested = false
-        if(email == mAuth.currentUser?.email){
-            mAuth.sendPasswordResetEmail(email)
-            isPasswordChangeRequested = true
-        }
-        return isPasswordChangeRequested
+    fun changePassword(email: String){
+        mAuth.sendPasswordResetEmail(email)
     }
 
     fun setNewHighScore(highScore: Int){
-        myRef.child(getCurrentUser().uid).child("highScore").setValue(highScore)
+        val newHighScore = HashMap<String,Int>()
+        newHighScore["highScore"] = highScore
+        database.collection("users").document(getCurrentUser().uid).set(newHighScore)
     }
 
-    fun getHighScore(): Int{
-        var highScore = 0
-        val listener = object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach{
-                    val user = it.getValue(User::class.java)
-                    highScore = user?.highScore ?: 0
-                    Log.d(TAG,highScore.toString())
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d(TAG,"retrieving highScore failed")
-            }
-
-        }
-        myRef.addValueEventListener(listener)
-        return highScore
+    suspend fun getHighScore(): Int{
+        val user = database.collection("users").document(getCurrentUser().uid).get().await()
+        return user.get("highScore") as Int
     }
 
-    private fun checkIfUsernameIsAvailable(username: String): Boolean{
+    private suspend fun checkIfUsernameIsAvailable(username: String): Boolean {
         var isUsernameAvailable = true
-        val listener = object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach{
-                    Log.d(TAG,"checking username")
-                    val user = it.getValue(User::class.java)
-                    if(user?.username == username){
-                        isUsernameAvailable = false
-                    }
-                }
+        val collection = database.collection("users").get().await()
+        collection.forEach{
+            if(it.id != getCurrentUser().uid){
+                if(it.get("username") == username)
+                    isUsernameAvailable = false
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d(TAG,"checking if username is available failed")
-            }
-
         }
-        myRef.addValueEventListener(listener)
         return isUsernameAvailable
     }
 
-    fun chooseUsername(username: String): Boolean{
+    suspend fun chooseUsername(username: String): Boolean{
         return if(checkIfUsernameIsAvailable(username)){
-            myRef.child(getCurrentUser().uid).child("username").setValue(username)
+            database.collection("users").document(getCurrentUser().uid).update("username",username)
             true
         } else {
             Toast.makeText(Quizz.context,"Username unavailable!",Toast.LENGTH_SHORT).show()
@@ -134,19 +110,8 @@ class Repository() {
         }
     }
 
-    fun getCurrentUserObject(): User?{
-        var user: User? = User()
-        val listener = object: ValueEventListener {
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                user = snapshot.child(getCurrentUser().uid).getValue(User::class.java)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d(TAG, "checking if username is available failed")
-            }
-        }
-        myRef.addValueEventListener(listener)
-        return user
+    suspend fun getCurrentUserObject(): User?{
+        val user = database.collection("users").document(getCurrentUser().uid).get().await()
+        return user.toObject(User::class.java)
     }
 }

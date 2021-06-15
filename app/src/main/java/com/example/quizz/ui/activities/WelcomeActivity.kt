@@ -12,6 +12,9 @@ import com.example.quizz.ui.fragments.ChooseUsernameFragment
 import com.example.quizz.ui.fragments.LoginFragment
 import com.example.quizz.ui.fragments.RegisterFragment
 import com.example.quizz.ui.viewmodels.RegisterViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WelcomeActivity :  AppCompatActivity() {
@@ -43,6 +46,9 @@ class WelcomeActivity :  AppCompatActivity() {
         loginFragment.setUpChangePasswordListener {
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container,changePasswordFragment).commit()
         }
+        changePasswordFragment.setUpBackToLoginListener {
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container,loginFragment).commit()
+        }
 
         viewModel.isUsernameChosen.observe(this){
             if(it){
@@ -51,7 +57,8 @@ class WelcomeActivity :  AppCompatActivity() {
         }
         viewModel.isPasswordChangeRequested.observe(this){
             if(it) {
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, loginFragment)
+                Log.d(TAG,"password change requested")
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, loginFragment).commit()
             }
         }
         viewModel.isUserRegisteredSuccessfully.observe(this){
@@ -75,9 +82,11 @@ class WelcomeActivity :  AppCompatActivity() {
     }
 
     private fun startMainActivity(){
-        val intent: Intent = Intent(Quizz.context,MainActivity::class.java)
-        intent.putExtra("user",viewModel.getCurrentUserObject())
-        startActivity(intent)
+        CoroutineScope(Dispatchers.IO).launch {
+            val intent: Intent = Intent(Quizz.context,MainActivity::class.java)
+            intent.putExtra("user",viewModel.getCurrentUserObject())
+            startActivity(intent)
+        }
     }
 
     override fun onStart() {
