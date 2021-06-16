@@ -60,10 +60,6 @@ class Repository() {
         return signingSuccessful
     }
 
-    fun signOut(){
-        mAuth.signOut()
-    }
-
     fun checkIfUserIsSignedIn() : Boolean {
         val currentUser : FirebaseUser? = mAuth.currentUser
         return currentUser != null
@@ -75,17 +71,6 @@ class Repository() {
 
     fun changePassword(email: String){
         mAuth.sendPasswordResetEmail(email)
-    }
-
-    fun setNewHighScore(highScore: Int){
-        val newHighScore = HashMap<String,Int>()
-        newHighScore["highScore"] = highScore
-        database.collection("users").document(getCurrentUser().uid).set(newHighScore)
-    }
-
-    suspend fun getHighScore(): Int{
-        val user = database.collection("users").document(getCurrentUser().uid).get().await()
-        return user.get("highScore") as Int
     }
 
     private suspend fun checkIfUsernameIsAvailable(username: String): Boolean {
@@ -114,4 +99,48 @@ class Repository() {
         val user = database.collection("users").document(getCurrentUser().uid).get().await()
         return user.toObject(User::class.java)
     }
+
+    suspend fun getPlayersForRecyclerView(): List<User>{
+        val users: MutableList<User> = mutableListOf()
+        val players = database.collection("users").get().await()
+        players.forEach {
+            users.add(it.toObject(User::class.java))
+        }
+        users.sortByDescending {
+            it.highScore
+        }
+        for(i in 0..2){
+            users.removeAt(0)
+        }
+        return users
+    }
+
+    suspend fun getTopThreePlayers(): List<User>{
+        val users: MutableList<User> = mutableListOf()
+        val players = database.collection("users").get().await()
+        players.forEach {
+            users.add(it.toObject(User::class.java))
+        }
+        users.sortByDescending {
+            it.highScore
+        }
+        val topThreePlayers = mutableListOf<User>()
+        for(i in 0..2){
+            topThreePlayers.add(users[i])
+        }
+        return topThreePlayers
+    }
+
+//
+//    fun setNewHighScore(highScore: Int){
+//        val newHighScore = HashMap<String,Int>()
+//        newHighScore["highScore"] = highScore
+//        database.collection("users").document(getCurrentUser().uid).set(newHighScore)
+//    }
+//
+//    suspend fun getHighScore(): Int{
+//        val user = database.collection("users").document(getCurrentUser().uid).get().await()
+//        return user.get("highScore") as Int
+//    }
+
 }

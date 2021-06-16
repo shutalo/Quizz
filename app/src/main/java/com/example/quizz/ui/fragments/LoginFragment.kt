@@ -17,7 +17,6 @@ class LoginFragment() : Fragment() {
     private val viewModel by sharedViewModel<RegisterViewModel>()
     private var registerButtonListener : (() -> Unit)? = null
     private var changePasswordListener : (() -> Unit)? = null
-    private var loginButtonListener : (() -> Unit)? = null
     private lateinit var binding: FragmentLoginBinding
 
     fun setUpRegisterButtonListener(listener: (() -> Unit)){
@@ -28,9 +27,6 @@ class LoginFragment() : Fragment() {
         this.changePasswordListener = listener
     }
 
-    fun setUpLoginButtonListener(listener: (() -> Unit)){
-        this.loginButtonListener = listener
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentLoginBinding.inflate(layoutInflater)
@@ -48,12 +44,6 @@ class LoginFragment() : Fragment() {
         }
         binding.loginButton.setOnClickListener{
             viewModel.signIn(binding.email.text.toString(),binding.password.text.toString())
-        }
-
-        viewModel.isSigningInSuccessful.observe(viewLifecycleOwner){
-            if(it){
-                loginButtonListener?.invoke()
-            }
         }
     }
 }

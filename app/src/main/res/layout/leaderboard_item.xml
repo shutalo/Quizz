@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:id="@+id/player_position_iv"
+            android:src="@drawable/recyclerview_item_image"
+            android:layout_marginLeft="10dp">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/player_position_iv"
+            app:layout_constraintRight_toRightOf="@id/player_position_iv"
+            app:layout_constraintTop_toTopOf="@id/player_position_iv"
+            app:layout_constraintBottom_toBottomOf="@id/player_position_iv"
+            android:text="3"
+            android:textSize="32sp"/>
+
+        <TextView
+            android:id="@+id/player_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/player_position_iv"
+            app:layout_constraintTop_toTopOf="@id/player_position_iv"
+            app:layout_constraintBottom_toBottomOf="@id/player_position_iv"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"/>
+
+        <TextView
+            android:id="@+id/player_high_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/player_position_iv"
+            app:layout_constraintBottom_toBottomOf="@id/player_position_iv"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:layout_marginRight="20dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

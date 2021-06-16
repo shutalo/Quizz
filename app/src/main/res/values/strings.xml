@@ -19,4 +19,10 @@
     <string name="change_password_intro">Next time pick something you cant forget.</string>
     <string name="change_password_description">Can\'t remember my password</string>
     <string name="change_password_new_password">I want new password!</string>
+    <string name="fragment_main_title">Let\'s play!</string>
+    <string name="fragment_main_into">Not sure how the game works? Click this for more info about the rules.</string>
+    <string name="fragment_main_ready">Ready?</string>
+    <string name="fragment_main_rules">Rules</string>
+    <string name="fragment_main_play">Play</string>
+    <string name="fragment_leaderboard_title">Leaderboard</string>
 </resources>
