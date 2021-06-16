@@ -20,8 +20,8 @@ class RegisterViewModel(private val repository: Repository) : ViewModel() {
     var isUserRegisteredSuccessfully: LiveData<Boolean> = _isUserRegisteredSuccessfully
     private var _isPasswordChangeRequested: MutableLiveData<Boolean> = MutableLiveData(false)
     var isPasswordChangeRequested: LiveData<Boolean> = _isPasswordChangeRequested
-    private var _isUserSignedIn: MutableLiveData<Boolean> = MutableLiveData(false)
-    var isUserSignedIn: LiveData<Boolean> = _isUserSignedIn
+    private var _isUserSignedIn: MutableLiveData<Boolean?> = MutableLiveData(null)
+    var isUserSignedIn: LiveData<Boolean?> = _isUserSignedIn
     private var _isSigningInSuccessful: MutableLiveData<Boolean> = MutableLiveData(false)
     var isSigningInSuccessful: LiveData<Boolean> = _isSigningInSuccessful
     private var _isUsernameChosen: MutableLiveData<Boolean> = MutableLiveData(false)
