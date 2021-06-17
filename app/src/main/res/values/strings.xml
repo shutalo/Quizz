@@ -25,4 +25,8 @@
     <string name="fragment_main_rules">Rules</string>
     <string name="fragment_main_play">Play</string>
     <string name="fragment_leaderboard_title">Leaderboard</string>
+    <string name="fragment_profile_intro">Let people see your pretty face!</string>
+    <string name="fragment_profile_description">Change your password</string>
+    <string name="fragment_profile_change_password">Change my password!</string>
+    <string name="fragment_profile_delete_account">Delete your precious account.</string>
 </resources>

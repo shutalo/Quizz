@@ -25,8 +25,7 @@
             app:layout_constraintRight_toRightOf="@id/player_position_iv"
             app:layout_constraintTop_toTopOf="@id/player_position_iv"
             app:layout_constraintBottom_toBottomOf="@id/player_position_iv"
-            android:text="3"
-            android:textSize="32sp"/>
+            android:textSize="24sp"/>
 
         <TextView
             android:id="@+id/player_name"
@@ -35,6 +34,7 @@
             app:layout_constraintLeft_toRightOf="@id/player_position_iv"
             app:layout_constraintTop_toTopOf="@id/player_position_iv"
             app:layout_constraintBottom_toBottomOf="@id/player_position_iv"
+            android:fontFamily="@font/poppins"
             android:textSize="20sp"
             android:textColor="@color/white"
             android:layout_marginLeft="20dp"/>
@@ -47,7 +47,8 @@
             app:layout_constraintTop_toTopOf="@id/player_position_iv"
             app:layout_constraintBottom_toBottomOf="@id/player_position_iv"
             android:textColor="@color/white"
-            android:textSize="28sp"
+            android:textSize="20sp"
+            android:fontFamily="@font/poppins"
             android:layout_marginRight="20dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

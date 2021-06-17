@@ -51,29 +51,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/player_position_2_cv"
+            <ImageView
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:elevation="12dp"
-                app:cardCornerRadius="40dp"
-                android:innerRadius="0dp"
-                android:shape="ring">
-
-                <ImageView
-                    android:layout_height="80dp"
-                    android:layout_width="match_parent"
-                    android:id="@+id/player_position2_iv"
-                    android:src="@drawable/ic_launcher_background">
-                </ImageView>
-            </androidx.cardview.widget.CardView>
+                android:layout_width="80dp"
+                android:id="@+id/player_position2_iv"
+                android:src="@drawable/profile_image"/>
 
             <ImageView
                 android:id="@+id/rank_2_iv"
-                app:layout_constraintTop_toTopOf="@id/player_position_2_cv"
-                app:layout_constraintRight_toRightOf="@id/player_position_2_cv"
+                app:layout_constraintTop_toTopOf="@id/player_position2_iv"
+                app:layout_constraintRight_toRightOf="@id/player_position2_iv"
                 android:layout_marginTop="50dp"
                 android:elevation="10dp"
                 android:layout_height="35dp"
@@ -100,7 +89,7 @@
                 android:id="@+id/player_name_2"
                 android:layout_marginTop="5dp"
                 android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@+id/player_position_2_cv"
+                app:layout_constraintTop_toBottomOf="@+id/player_position2_iv"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textSize="20sp"
@@ -128,30 +117,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             >
-            <androidx.cardview.widget.CardView
+
+            <ImageView
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/player_position_1_cv"
-                android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:elevation="12dp"
-                app:cardCornerRadius="50dp"
-                android:innerRadius="0dp"
-                android:shape="ring">
-
-                <ImageView
-                    android:layout_height="100dp"
-                    android:layout_width="match_parent"
-                    android:id="@+id/player_position1_iv"
-                    android:src="@drawable/ic_launcher_background">
-                </ImageView>
-
-            </androidx.cardview.widget.CardView>
+                android:layout_width="100dp"
+                android:id="@+id/player_position1_iv"
+                android:src="@drawable/profile_image"/>
 
             <ImageView
                 android:id="@+id/rank_1_iv"
-                app:layout_constraintTop_toTopOf="@id/player_position_1_cv"
-                app:layout_constraintRight_toRightOf="@id/player_position_1_cv"
+                app:layout_constraintTop_toTopOf="@id/player_position1_iv"
+                app:layout_constraintRight_toRightOf="@id/player_position1_iv"
                 android:layout_marginTop="60dp"
                 android:elevation="10dp"
                 android:layout_height="38dp"
@@ -178,7 +156,7 @@
                 android:id="@+id/player_name_1"
                 android:layout_marginTop="5dp"
                 android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@+id/player_position_1_cv"
+                app:layout_constraintTop_toBottomOf="@+id/player_position1_iv"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textSize="20sp"
@@ -206,30 +184,19 @@
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp">
 
-            <androidx.cardview.widget.CardView
+            <ImageView
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/player_position_3_cv"
-                android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:elevation="12dp"
-                app:cardCornerRadius="40dp"
-                android:innerRadius="0dp"
-                android:shape="ring">
+                android:layout_width="80dp"
+                android:id="@+id/player_position3_iv"
+                android:src="@drawable/profile_image"/>
 
-                <ImageView
-                    android:layout_height="80dp"
-                    android:layout_width="match_parent"
-                    android:id="@+id/player_position3_iv"
-                    android:src="@drawable/ic_launcher_background">
-                </ImageView>
-
-            </androidx.cardview.widget.CardView>
 
             <ImageView
                 android:id="@+id/rank_3_iv"
-                app:layout_constraintTop_toTopOf="@id/player_position_3_cv"
-                app:layout_constraintRight_toRightOf="@id/player_position_3_cv"
+                app:layout_constraintTop_toTopOf="@id/player_position3_iv"
+                app:layout_constraintRight_toRightOf="@id/player_position3_iv"
                 android:layout_marginTop="50dp"
                 android:elevation="10dp"
                 android:layout_height="35dp"
@@ -256,7 +223,7 @@
                 android:id="@+id/player_name_3"
                 android:layout_marginTop="5dp"
                 android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@+id/player_position_3_cv"
+                app:layout_constraintTop_toBottomOf="@+id/player_position3_iv"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textSize="20sp"

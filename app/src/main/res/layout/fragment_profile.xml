@@ -5,12 +5,183 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background_color">
 
-    <Button
-        android:id="@+id/sign_out_btn"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftGuideline"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintGuide_begin="24dp"
+        android:orientation="vertical">
+    </androidx.constraintlayout.widget.Guideline>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuideline"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintGuide_end="24dp"
+        android:orientation="vertical">
+    </androidx.constraintlayout.widget.Guideline>
+
+    <ImageView
+        android:id="@+id/profile_image_iv"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
+        app:layout_constraintLeft_toLeftOf="@id/leftGuideline"
+        app:layout_constraintRight_toRightOf="@id/rightGuideline"
+        android:layout_marginTop="50dp"
         android:layout_height="wrap_content"
-        android:text="sign out"
+        android:layout_width="wrap_content"
+        android:src="@drawable/profile_image"/>
+
+    <ImageView
+        android:id="@+id/edit_profile_image_container_iv"
+        app:layout_constraintTop_toTopOf="@id/profile_image_iv"
+        app:layout_constraintRight_toRightOf="@id/profile_image_iv"
+        android:layout_marginTop="100dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/edit_profile_photo_image"/>
+
+    <ImageView
+        app:layout_constraintTop_toTopOf="@+id/edit_profile_image_container_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_profile_image_container_iv"
+        app:layout_constraintLeft_toLeftOf="@+id/edit_profile_image_container_iv"
+        app:layout_constraintRight_toRightOf="@+id/edit_profile_image_container_iv"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/edit_profile_image_iv"
+        android:elevation="13dp"
+        android:src="@drawable/ic_camera"/>
+
+    <TextView
+        android:id="@+id/profile_image_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_profile_intro"
+        style="@style/TextAppearance.Title"
+        android:textSize="16sp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+        app:layout_constraintTop_toBottomOf="@id/profile_image_iv"/>
+
+    <TextView
+        android:id="@+id/change_password_description_tv"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_profile_description"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@id/profile_image_tv" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/new_password_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:startIconDrawable ="@drawable/password"
+        app:startIconTint="@color/white"
+        app:endIconTint="@color/white"
+        app:endIconMode="password_toggle"
+        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+        app:layout_constraintTop_toBottomOf="@id/change_password_description_tv"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="New password"
+        android:textColorHint ="@color/white"
+        app:hintTextColor="@color/white"
+        app:boxStrokeWidth="0dp"
+        app:boxBackgroundColor="@color/header_color"
+        android:enabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/new_password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/confirm_password_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:startIconDrawable ="@drawable/password"
+        app:startIconTint="@color/white"
+        app:endIconTint="@color/white"
+        app:endIconMode="password_toggle"
+        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+        app:layout_constraintTop_toBottomOf="@id/new_password_input_layout"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="Confirm password"
+        android:textColorHint ="@color/white"
+        app:hintTextColor="@color/white"
+        app:boxStrokeWidth="0dp"
+        app:boxBackgroundColor="@color/header_color"
+        android:enabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/change_password_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+        app:layout_constraintTop_toBottomOf="@id/confirm_password_input_layout"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/log_reg_button"
+        android:text="@string/fragment_profile_change_password"
+        style="@style/logRegButton"
+        />
+
+    <TextView
+        android:id="@+id/delete_account_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_profile_delete_account"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/dark_red"
+        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+        app:layout_constraintTop_toBottomOf="@id/change_password_button" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/sign_out_btn"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/delete_account_tv"
+        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/switch_to_log_reg_button"
+        style="@style/switchLogRegButton"
+        android:text="Sign out"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

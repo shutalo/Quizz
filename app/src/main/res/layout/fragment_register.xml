@@ -72,6 +72,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginLeft="10dp"
         android:textSize="18sp"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toRightOf="@id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@id/intro_tv" />
 

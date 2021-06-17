@@ -1,14 +1,17 @@
 package com.example.quizz.data.repository
 
+import android.graphics.Bitmap
+import android.util.Base64
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.viewModelScope
 import com.example.quizz.Quizz
 import com.example.quizz.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.util.*
 import kotlin.collections.HashMap
 
 class Repository() {
@@ -58,6 +61,10 @@ class Repository() {
             }
         }
         return signingSuccessful
+    }
+
+    fun signOut(){
+        mAuth.signOut()
     }
 
     fun checkIfUserIsSignedIn() : Boolean {
@@ -131,6 +138,36 @@ class Repository() {
         return topThreePlayers
     }
 
+    suspend fun updatePassword(newPassword: String, confirmPassword: String){
+        if(newPassword == "" || confirmPassword == ""){
+            Toast.makeText(Quizz.context,"Password entry must not be empty!", Toast.LENGTH_SHORT).show()
+        } else if(newPassword == confirmPassword && newPassword.length < 6){
+            Toast.makeText(Quizz.context,"Password too short!", Toast.LENGTH_SHORT).show()
+        } else if(newPassword != confirmPassword){
+            Toast.makeText(Quizz.context,"Password must match!", Toast.LENGTH_SHORT).show()
+        } else if(newPassword == confirmPassword){
+            getCurrentUser().updatePassword(newPassword).await()
+            Toast.makeText(Quizz.context,"Password changed successfully!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    suspend fun deleteAccount(): Boolean{
+        database.collection("users").document(getCurrentUser().uid).delete().await()
+        getCurrentUser().delete().await()
+        //dodat dialogalert
+        Toast.makeText(Quizz.context,"Account deleted.",Toast.LENGTH_SHORT).show()
+        return true
+    }
+
+    suspend fun getPhoto(): String?{
+        val user = database.collection("users").document(getCurrentUser().uid).get().await()
+        return user.toObject(User::class.java)?.photo
+    }
+
+    suspend fun updatePhoto(bitmap: Bitmap){
+        //bitmap to string
+        database.collection("users").document(getCurrentUser().uid).set(bitmap.toString()).await()
+    }
 //
 //    fun setNewHighScore(highScore: Int){
 //        val newHighScore = HashMap<String,Int>()

@@ -1,6 +1,8 @@
 package com.example.quizz.ui.activities
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -51,5 +53,14 @@ class MainActivity : AppCompatActivity() {
             tab.setIcon(tabIcons[position])
         }
         tabLayoutMediator.attach()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == MainScreenViewModel.REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK){
+            //retrieve photo
+            //val bitmap: Bitmap = intent.get as Bitmap
+            viewModel.updatePhoto(bitmap)
+        }
     }
 }
