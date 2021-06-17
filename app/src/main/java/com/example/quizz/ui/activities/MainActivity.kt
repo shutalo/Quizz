@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         if(requestCode == MainScreenViewModel.REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK){
             //retrieve photo
             //val bitmap: Bitmap = intent.get as Bitmap
-            viewModel.updatePhoto(bitmap)
+//            viewModel.updatePhoto(bitmap)
         }
     }
 }

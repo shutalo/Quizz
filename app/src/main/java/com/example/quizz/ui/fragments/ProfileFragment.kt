@@ -59,7 +59,7 @@ class ProfileFragment() : Fragment() {
         }
 
         viewModel.imageUpdated.observe(viewLifecycleOwner){
-            binding.profileImageIv.setImageBitmap(viewModel.getPhoto())
+//            binding.profileImageIv.setImageBitmap(viewModel.getPhoto())
         }
     }
 

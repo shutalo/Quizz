@@ -83,7 +83,7 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
     fun updatePhoto(bitmap: Bitmap){
         viewModelScope.launch {
             repository.updatePhoto(bitmap)
-            _imageUpdated.postValue(repository.getPhoto())
+//            _imageUpdated.postValue(repository.getPhoto())
         }
     }
 
