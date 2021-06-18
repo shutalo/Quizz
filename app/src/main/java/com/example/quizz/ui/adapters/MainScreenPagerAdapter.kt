@@ -21,5 +21,4 @@ class MainScreenPagerAdapter(activity: MainActivity) : FragmentStateAdapter(acti
             else -> ProfileFragment.getInstance()
         }
     }
-
 }

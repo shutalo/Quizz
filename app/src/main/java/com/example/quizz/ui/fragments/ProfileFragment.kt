@@ -1,15 +1,22 @@
 package com.example.quizz.ui.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Bitmap
+import android.content.res.Resources
+import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.example.quizz.databinding.FragmentMainBinding
+import com.example.quizz.Quizz
+import com.example.quizz.R
 import com.example.quizz.databinding.FragmentProfileBinding
+import com.example.quizz.helpers.ImageParser
 import com.example.quizz.ui.activities.MainActivity
 import com.example.quizz.ui.activities.WelcomeActivity
 import com.example.quizz.ui.viewmodels.MainScreenViewModel
@@ -17,7 +24,6 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ProfileFragment() : Fragment() {
@@ -31,6 +37,7 @@ class ProfileFragment() : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -44,6 +51,9 @@ class ProfileFragment() : Fragment() {
         }
 
         binding.deleteAccountTv.setOnClickListener{
+            val dialog = DialogFragment()
+            dialog.se
+            dialog.setStyle(R.layout.dialog_delete_account,R.style.Theme_Quizz)
             viewModel.deleteAccount()
         }
 
@@ -59,7 +69,23 @@ class ProfileFragment() : Fragment() {
         }
 
         viewModel.imageUpdated.observe(viewLifecycleOwner){
-//            binding.profileImageIv.setImageBitmap(viewModel.getPhoto())
+            if(it != null && !ImageParser.bitMapToByteArray(it).contentEquals(ImageParser.bitMapToByteArray(BitmapFactory.decodeResource(Quizz.context.resources,R.drawable.profile_photo)))){
+                binding.editProfileImageIv.setImageResource(R.drawable.ic_pen)
+                val img = RoundedBitmapDrawableFactory.create(resources,it)
+                img.isCircular = true
+                binding.profileImageIv.setImageDrawable(img)
+            } else {
+                val theme = resources.newTheme()
+                binding.profileImageIv.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,theme))
+            }
+        }
+
+        viewModel.photoUploadStarted.observe(viewLifecycleOwner){
+            if(it){
+                binding.progressBar.visibility = View.VISIBLE
+            } else{
+                binding.progressBar.visibility = View.GONE
+            }
         }
     }
 

@@ -5,6 +5,4 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class User(var username: String? = "", var highScore: Int? = 0, var photo: String? = null) : Parcelable {
-
-}
+data class User(var username: String? = "", var highScore: Int? = 0, var photo: ByteArray? = null) : Parcelable

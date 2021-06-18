@@ -21,14 +21,14 @@
         android:orientation="vertical">
     </androidx.constraintlayout.widget.Guideline>
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profile_image_iv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/leftGuideline"
         app:layout_constraintRight_toRightOf="@id/rightGuideline"
         android:layout_marginTop="50dp"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_width="150dp"
         android:src="@drawable/profile_image"/>
 
     <ImageView
@@ -182,6 +182,17 @@
         android:background="@drawable/switch_to_log_reg_button"
         style="@style/switchLogRegButton"
         android:text="Sign out"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        app:layout_constraintTop_toBottomOf="@id/change_password_description_tv"
+        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+        android:layout_marginTop="35dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:indeterminateDrawable="@drawable/progress"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

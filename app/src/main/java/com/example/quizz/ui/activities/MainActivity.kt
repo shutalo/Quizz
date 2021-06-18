@@ -3,13 +3,16 @@ package com.example.quizz.ui.activities
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Bitmap.createScaledBitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.ArrayMap
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.createBitmap
 import androidx.viewpager2.widget.ViewPager2
 import com.example.quizz.R
 import com.example.quizz.data.model.User
@@ -20,6 +23,9 @@ import com.example.quizz.ui.viewmodels.MainScreenViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -33,11 +39,24 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         this.supportActionBar?.hide()
-//        val user: User? = intent.getParcelableExtra<User>("user")
-//        binding.mainActivityTv.text = user?.username
 
         setUpViewPager()
         setUpTabLayout()
+
+        viewModel.topThreePlayers.observe(this){
+            binding.progressBar.visibility = View.GONE
+        }
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if(position == 0){
+                    binding.progressBar.visibility = View.VISIBLE
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                }
+            }
+        })
     }
 
     private fun setUpViewPager(){
@@ -57,10 +76,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == MainScreenViewModel.REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK){
-            //retrieve photo
-            //val bitmap: Bitmap = intent.get as Bitmap
-//            viewModel.updatePhoto(bitmap)
+        if(resultCode != Activity.RESULT_CANCELED){
+            if(requestCode == MainScreenViewModel.REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK){
+                //retrieve photo
+                val bitmap: Bitmap = data?.extras?.get("data") as Bitmap
+                viewModel.updatePhoto(createScaledBitmap(bitmap,150,150,true))
+            }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.getPhoto()
+        }
+    }
+
+
 }

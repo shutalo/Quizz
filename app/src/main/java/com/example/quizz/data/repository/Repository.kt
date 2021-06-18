@@ -1,15 +1,21 @@
 package com.example.quizz.data.repository
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
 import android.widget.Toast
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.lifecycle.viewModelScope
 import com.example.quizz.Quizz
+import com.example.quizz.R
 import com.example.quizz.data.model.User
+import com.example.quizz.helpers.ImageParser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlin.collections.HashMap
@@ -20,6 +26,7 @@ class Repository() {
 
     private val database: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val storage = FirebaseStorage.getInstance("gs://quizz-77a0e.appspot.com")
 
     suspend fun register(email: String, password: String): Boolean{
         var isRegistrationSuccessful = false
@@ -94,7 +101,8 @@ class Repository() {
 
     suspend fun chooseUsername(username: String): Boolean{
         return if(checkIfUsernameIsAvailable(username)){
-            database.collection("users").document(getCurrentUser().uid).update("username",username)
+            database.collection("users").document(getCurrentUser().uid).update("username",username).await()
+            updateInitialPhoto(username)
             true
         } else {
             Toast.makeText(Quizz.context,"Username unavailable!",Toast.LENGTH_SHORT).show()
@@ -116,8 +124,10 @@ class Repository() {
         users.sortByDescending {
             it.highScore
         }
-        for(i in 0..2){
-            users.removeAt(0)
+        if(users.size >= 3){
+            for(i in 0..2){
+                users.removeAt(0)
+            }
         }
         return users
     }
@@ -132,9 +142,17 @@ class Repository() {
             it.highScore
         }
         val topThreePlayers = mutableListOf<User>()
-        for(i in 0..2){
-            topThreePlayers.add(users[i])
+        if(users.size >= 3){
+            for(i in 0..2){
+                users[i].photo = getPhoto(users[i].username!!)
+                topThreePlayers.add(users[i])
+            }
+        } else {
+            for(i in 0 until users.size){
+                topThreePlayers.add(users[i])
+            }
         }
+
         return topThreePlayers
     }
 
@@ -159,25 +177,18 @@ class Repository() {
         return true
     }
 
-    suspend fun getPhoto(): String?{
-        val user = database.collection("users").document(getCurrentUser().uid).get().await()
-        return user.toObject(User::class.java)?.photo
+    suspend fun getPhoto(username: String): ByteArray{
+        val storageReference = storage.reference.child("images/$username/$username.jpg")
+        return storageReference.getBytes(1000000000000).await()
     }
 
-    suspend fun updatePhoto(bitmap: Bitmap){
-        //bitmap to string
-        database.collection("users").document(getCurrentUser().uid).set(bitmap.toString()).await()
+    suspend fun updatePhoto(bitmap: Bitmap, username: String){
+        val storageReference = storage.reference.child("images/$username/$username.jpg")
+        storageReference.putBytes(ImageParser.bitMapToByteArray(bitmap)).await()
     }
-//
-//    fun setNewHighScore(highScore: Int){
-//        val newHighScore = HashMap<String,Int>()
-//        newHighScore["highScore"] = highScore
-//        database.collection("users").document(getCurrentUser().uid).set(newHighScore)
-//    }
-//
-//    suspend fun getHighScore(): Int{
-//        val user = database.collection("users").document(getCurrentUser().uid).get().await()
-//        return user.get("highScore") as Int
-//    }
 
+    private suspend fun updateInitialPhoto(username: String){
+        val storageReference = storage.reference.child("images/$username/$username.jpg")
+        storageReference.putBytes(ImageParser.bitMapToByteArray(BitmapFactory.decodeResource(Quizz.context.resources,R.drawable.profile_photo))).await()
+    }
 }
