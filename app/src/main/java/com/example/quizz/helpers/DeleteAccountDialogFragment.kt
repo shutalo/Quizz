@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.quizz.databinding.DialogDeleteAccountBinding
-import com.example.quizz.databinding.FragmentProfileBinding
+import androidx.fragment.app.setFragmentResult
 
 class DeleteAccountDialogFragment: DialogFragment() {
 
@@ -23,5 +23,23 @@ class DeleteAccountDialogFragment: DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.positiveButton.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putBoolean("value",true)
+            setFragmentResult(DELETE_ACCOUNT_REQUEST,bundle)
+            dismiss()
+        }
+
+        binding.negativeButton.setOnClickListener {
+            dismiss()
+        }
+    }
+
+    companion object{
+        fun getInstance(): DeleteAccountDialogFragment{
+            return DeleteAccountDialogFragment()
+        }
+        const val DELETE_ACCOUNT_REQUEST = "1"
     }
 }

@@ -2,11 +2,9 @@ package com.example.quizz.data.repository
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Base64
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.lifecycle.viewModelScope
 import com.example.quizz.Quizz
 import com.example.quizz.R
 import com.example.quizz.data.model.User
@@ -15,8 +13,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlin.collections.HashMap
 
@@ -142,17 +138,10 @@ class Repository() {
             it.highScore
         }
         val topThreePlayers = mutableListOf<User>()
-        if(users.size >= 3){
-            for(i in 0..2){
-                users[i].photo = getPhoto(users[i].username!!)
-                topThreePlayers.add(users[i])
-            }
-        } else {
-            for(i in 0 until users.size){
-                topThreePlayers.add(users[i])
-            }
+        for(i in 0..2){
+            users[i].photo = getPhoto(users[i].username!!)
+            topThreePlayers.add(users[i])
         }
-
         return topThreePlayers
     }
 
@@ -171,20 +160,30 @@ class Repository() {
 
     suspend fun deleteAccount(): Boolean{
         database.collection("users").document(getCurrentUser().uid).delete().await()
+        storage.reference.child("images/${getCurrentUserObject()?.username}/${getCurrentUserObject()?.username}.jpg").delete().await()
         getCurrentUser().delete().await()
-        //dodat dialogalert
         Toast.makeText(Quizz.context,"Account deleted.",Toast.LENGTH_SHORT).show()
         return true
     }
 
-    suspend fun getPhoto(username: String): ByteArray{
+//    suspend fun getPhoto(username: String): ByteArray{
+//        val storageReference = storage.reference.child("images/$username/$username.jpg")
+//        return storageReference.getBytes(1000000000000).await()
+//    }
+
+    suspend fun getPhoto(username: String): Uri {
         val storageReference = storage.reference.child("images/$username/$username.jpg")
-        return storageReference.getBytes(1000000000000).await()
+        return storageReference.downloadUrl.await()
     }
 
-    suspend fun updatePhoto(bitmap: Bitmap, username: String){
+//    suspend fun updatePhoto(bitmap: Bitmap, username: String){
+//        val storageReference = storage.reference.child("images/$username/$username.jpg")
+//        storageReference.putBytes(ImageParser.bitMapToByteArray(bitmap)).await()
+//    }
+
+    suspend fun updatePhoto(imageUri: Uri, username: String){
         val storageReference = storage.reference.child("images/$username/$username.jpg")
-        storageReference.putBytes(ImageParser.bitMapToByteArray(bitmap)).await()
+        storageReference.putFile(imageUri).await()
     }
 
     private suspend fun updateInitialPhoto(username: String){

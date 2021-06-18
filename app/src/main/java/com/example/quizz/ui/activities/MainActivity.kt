@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModel<MainScreenViewModel>()
+    private var firstTimeStartedFlag = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +51,9 @@ class MainActivity : AppCompatActivity() {
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                if(position == 0){
+                if(position == 0 && firstTimeStartedFlag){
                     binding.progressBar.visibility = View.VISIBLE
+                    firstTimeStartedFlag = false
                 } else {
                     binding.progressBar.visibility = View.GONE
                 }
@@ -78,9 +80,13 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode != Activity.RESULT_CANCELED){
             if(requestCode == MainScreenViewModel.REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK){
-                //retrieve photo
-                val bitmap: Bitmap = data?.extras?.get("data") as Bitmap
-                viewModel.updatePhoto(createScaledBitmap(bitmap,150,150,true))
+//                val bitmap: Bitmap = data?.extras?.get("data") as Bitmap
+//                viewModel.updatePhoto(createScaledBitmap(bitmap,150,150,true))
+            } else if(requestCode == MainScreenViewModel.REQUEST_SELECT_IMAGE_IN_ALBUM && resultCode == Activity.RESULT_OK){
+                val imageUri = data?.data
+                if (imageUri != null) {
+                    viewModel.updatePhoto(imageUri)
+                }
             }
         }
     }

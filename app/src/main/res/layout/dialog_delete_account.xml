@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -21,7 +21,7 @@
     </androidx.constraintlayout.widget.Guideline>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
+        android:layout_width="370dp"
         android:layout_height="200dp"
         app:layout_constraintLeft_toLeftOf="@id/leftGuideline"
         app:layout_constraintRight_toRightOf="@id/rightGuideline"
@@ -32,13 +32,15 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="10dp"
             android:textSize="18sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:textColor="@color/white"
             android:text="@string/fragment_dialog_delete_account_title"
             />
@@ -57,11 +59,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:text="Yes"
-                android:background="@color/background_color"
+                android:backgroundTint="@color/background_color"
                 android:textAppearance="@style/logRegButton"
-                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="negative_button"
                 />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -70,10 +71,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="50dp"
                 android:text="No"
-                android:background="@color/background_color"
+                android:backgroundTint="@color/background_color"
                 android:textAppearance="@style/logRegButton"
-                app:layout_constraintLeft_toRightOf="positive_button"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 />
 

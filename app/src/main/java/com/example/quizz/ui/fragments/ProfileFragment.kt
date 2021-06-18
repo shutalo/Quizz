@@ -2,33 +2,29 @@ package com.example.quizz.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.example.quizz.Quizz
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.quizz.R
 import com.example.quizz.databinding.FragmentProfileBinding
-import com.example.quizz.helpers.ImageParser
+import com.example.quizz.helpers.DeleteAccountDialogFragment
 import com.example.quizz.ui.activities.MainActivity
 import com.example.quizz.ui.activities.WelcomeActivity
 import com.example.quizz.ui.viewmodels.MainScreenViewModel
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
+
 class ProfileFragment() : Fragment() {
 
-    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val TAG = "ProfileFragment"
     private val viewModel by sharedViewModel<MainScreenViewModel>()
     private lateinit var binding: FragmentProfileBinding
 
@@ -42,7 +38,7 @@ class ProfileFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.signOutBtn.setOnClickListener{
-            mAuth.signOut()
+            viewModel.signOut()
             startWelcomeActivity()
         }
 
@@ -51,10 +47,16 @@ class ProfileFragment() : Fragment() {
         }
 
         binding.deleteAccountTv.setOnClickListener{
-            val dialog = DialogFragment()
-            dialog.se
-            dialog.setStyle(R.layout.dialog_delete_account,R.style.Theme_Quizz)
-            viewModel.deleteAccount()
+            val dialog = DeleteAccountDialogFragment.getInstance()
+            parentFragmentManager.setFragmentResultListener(DeleteAccountDialogFragment.DELETE_ACCOUNT_REQUEST,viewLifecycleOwner,
+                { requestKey, result ->
+                    if(requestKey == DeleteAccountDialogFragment.DELETE_ACCOUNT_REQUEST){
+                        if(result.getBoolean("value")){
+                            viewModel.deleteAccount()
+                        }
+                    }
+                })
+            dialog.show(parentFragmentManager,TAG)
         }
 
         binding.editProfileImageIv.setOnClickListener{
@@ -69,11 +71,17 @@ class ProfileFragment() : Fragment() {
         }
 
         viewModel.imageUpdated.observe(viewLifecycleOwner){
-            if(it != null && !ImageParser.bitMapToByteArray(it).contentEquals(ImageParser.bitMapToByteArray(BitmapFactory.decodeResource(Quizz.context.resources,R.drawable.profile_photo)))){
+            if(it != null /*&& !ImageParser.bitMapToByteArray(it).contentEquals(ImageParser.bitMapToByteArray(BitmapFactory.decodeResource(Quizz.context.resources,R.drawable.profile_photo)))*/){
                 binding.editProfileImageIv.setImageResource(R.drawable.ic_pen)
-                val img = RoundedBitmapDrawableFactory.create(resources,it)
-                img.isCircular = true
-                binding.profileImageIv.setImageDrawable(img)
+//                val img = RoundedBitmapDrawableFactory.create(resources,it)
+//                img.isCircular = true
+//                binding.profileImageIv.setImageDrawable(img)
+                val theme = resources.newTheme()
+                Glide.with(binding.root)
+                    .load(it)
+                    .placeholder(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,theme))
+                    .circleCrop()
+                    .into(binding.profileImageIv)
             } else {
                 val theme = resources.newTheme()
                 binding.profileImageIv.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,theme))

@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.provider.MediaStore
 import android.service.quickaccesswallet.QuickAccessWalletService
 import android.util.Base64
@@ -28,6 +29,7 @@ import kotlinx.android.synthetic.main.dialog_profile_image.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
+import java.net.URI
 
 class MainScreenViewModel(private val repository: Repository): ViewModel() {
 
@@ -38,8 +40,8 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
     var topThreePlayers: LiveData<List<User>> = _topThreePlayers
     private var _accountDeleted: MutableLiveData<Boolean> = MutableLiveData(false)
     var accountDeleted: LiveData<Boolean> = _accountDeleted
-    private var _imageUpdated: MutableLiveData<Bitmap?> = MutableLiveData()
-    var imageUpdated: LiveData<Bitmap?> = _imageUpdated
+    private var _imageUpdated: MutableLiveData<Uri?> = MutableLiveData()
+    var imageUpdated: LiveData<Uri?> = _imageUpdated
     private var _photoUploadStarted: MutableLiveData<Boolean> = MutableLiveData(false)
     var photoUploadStarted: LiveData<Boolean> = _photoUploadStarted
 
@@ -57,7 +59,7 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
         return repository.getCurrentUser()
     }
 
-    suspend fun getCurrentUserObject(): User?{
+    private suspend fun getCurrentUserObject(): User?{
         return repository.getCurrentUserObject()
     }
 
@@ -76,18 +78,6 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
     fun signOut(){
         repository.signOut()
     }
-
-//
-//    fun selectImageInAlbum(activity: MainActivity) {
-//        viewModelScope.launch {
-//            val intent = Intent(Intent.ACTION_GET_CONTENT)
-//            intent.type = "image/*"
-//            if (intent.resolveActivity(Quizz.context.packageManager) != null) {
-//                startActivityForResult(activity,intent, REQUEST_SELECT_IMAGE_IN_ALBUM,null)
-//            }
-//        }
-//
-//    }
 
     fun takePhoto(activity: MainActivity) {
         viewModelScope.launch {
@@ -119,14 +109,23 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
     suspend fun getPhoto(){
         viewModelScope.launch {
             val image = repository.getPhoto(getCurrentUserObject()?.username!!)
-            _imageUpdated.postValue(ImageParser.byteArrayToBitMap(image))
+            _imageUpdated.postValue(image)
         }
     }
 
-    fun updatePhoto(bitmap: Bitmap){
+//    fun updatePhoto(bitmap: Bitmap){
+//        viewModelScope.launch {
+//            _photoUploadStarted.postValue(true)
+//            repository.updatePhoto(bitmap,getCurrentUserObject()?.username!!)
+//            _photoUploadStarted.postValue(false)
+//            getPhoto()
+//        }
+//    }
+
+    fun updatePhoto(imageUri: Uri){
         viewModelScope.launch {
             _photoUploadStarted.postValue(true)
-            repository.updatePhoto(bitmap,getCurrentUserObject()?.username!!)
+            repository.updatePhoto(imageUri,getCurrentUserObject()?.username!!)
             _photoUploadStarted.postValue(false)
             getPhoto()
         }
