@@ -30,4 +30,5 @@
     <string name="fragment_profile_change_password">Change my password!</string>
     <string name="fragment_profile_delete_account">Delete your precious account.</string>
     <string name="fragment_dialog_delete_account_title">Are you sure?</string>
+    <string name="fragment_game_next">Next</string>
 </resources>
