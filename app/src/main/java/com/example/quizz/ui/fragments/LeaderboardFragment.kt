@@ -22,6 +22,7 @@ import com.example.quizz.ui.adapters.LeaderboardRecyclerViewAdapter
 import com.example.quizz.ui.viewmodels.MainScreenViewModel
 import com.example.quizz.ui.viewmodels.RegisterViewModel
 import com.google.firebase.firestore.auth.User
+import kotlinx.android.synthetic.main.fragment_choose_username.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +32,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class LeaderboardFragment: Fragment() {
 
     private lateinit var binding: FragmentLeaderboardBinding
+    private lateinit var username: String
     private val viewModel by sharedViewModel<MainScreenViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,21 +44,12 @@ class LeaderboardFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.usersForRecyclerViewFetched.observe(viewLifecycleOwner){
-            (binding.recyclerView.adapter as LeaderboardRecyclerViewAdapter).refreshData(it)
+            (binding.recyclerView.adapter as LeaderboardRecyclerViewAdapter).refreshData(it,username)
         }
         viewModel.topThreePlayers.observe(viewLifecycleOwner){
             it[0].photo?.let { it1 -> setUpImage(it1,binding.playerPosition1Iv) }
             it[1].photo?.let { it2 -> setUpImage(it2,binding.playerPosition2Iv) }
             it[2].photo?.let { it3 -> setUpImage(it3,binding.playerPosition3Iv) }
-//            val player1 = RoundedBitmapDrawableFactory.create(resources,ImageParser.byteArrayToBitMap(it[0].photo))
-//            player1.isCircular = true
-//            binding.playerPosition1Iv.setImageDrawable(player1)
-//            val player2 = RoundedBitmapDrawableFactory.create(resources,ImageParser.byteArrayToBitMap(it[1].photo))
-//            player2.isCircular = true
-//            binding.playerPosition2Iv.setImageDrawable(player2)
-//            val player3 = RoundedBitmapDrawableFactory.create(resources,ImageParser.byteArrayToBitMap(it[2].photo))
-//            player3.isCircular = true
-//            binding.playerPosition3Iv.setImageDrawable(player3)
             binding.playerHighScore1.text = it[0].highScore.toString()
             binding.playerHighScore2.text = it[1].highScore.toString()
             binding.playerHighScore3.text = it[2].highScore.toString()
@@ -68,8 +61,10 @@ class LeaderboardFragment: Fragment() {
     }
 
     companion object{
-        fun getInstance(): LeaderboardFragment{
-            return LeaderboardFragment()
+        fun getInstance(username: String): LeaderboardFragment{
+            val lf = LeaderboardFragment()
+            lf.username = username
+            return lf
         }
     }
 

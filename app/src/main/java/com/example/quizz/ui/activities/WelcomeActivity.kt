@@ -83,6 +83,7 @@ class WelcomeActivity :  AppCompatActivity() {
     private fun startMainActivity(){
         CoroutineScope(Dispatchers.IO).launch {
             val intent: Intent = Intent(Quizz.context,MainActivity::class.java)
+            intent.putExtra("user",viewModel.getCurrentUserObject())
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK  or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }

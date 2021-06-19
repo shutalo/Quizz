@@ -1,5 +1,6 @@
 package com.example.quizz.data.repository
 
+import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import kotlin.collections.HashMap
 
 class Repository() {
@@ -98,7 +100,7 @@ class Repository() {
     suspend fun chooseUsername(username: String): Boolean{
         return if(checkIfUsernameIsAvailable(username)){
             database.collection("users").document(getCurrentUser().uid).update("username",username).await()
-            updateInitialPhoto(username)
+            //updateInitialPhoto(username)
             true
         } else {
             Toast.makeText(Quizz.context,"Username unavailable!",Toast.LENGTH_SHORT).show()
@@ -159,27 +161,26 @@ class Repository() {
     }
 
     suspend fun deleteAccount(): Boolean{
-        database.collection("users").document(getCurrentUser().uid).delete().await()
-        storage.reference.child("images/${getCurrentUserObject()?.username}/${getCurrentUserObject()?.username}.jpg").delete().await()
+        try {
+            storage.reference.child("images/${getCurrentUserObject()?.username}/${getCurrentUserObject()?.username}.jpg").delete().await()
+            database.collection("users").document(getCurrentUser().uid).delete().await()
+        } catch (e: Exception){
+            Log.d(TAG,e.message.toString())
+        }
         getCurrentUser().delete().await()
         Toast.makeText(Quizz.context,"Account deleted.",Toast.LENGTH_SHORT).show()
         return true
     }
 
-//    suspend fun getPhoto(username: String): ByteArray{
-//        val storageReference = storage.reference.child("images/$username/$username.jpg")
-//        return storageReference.getBytes(1000000000000).await()
-//    }
-
-    suspend fun getPhoto(username: String): Uri {
-        val storageReference = storage.reference.child("images/$username/$username.jpg")
-        return storageReference.downloadUrl.await()
+    suspend fun getPhoto(username: String): Uri? {
+        return try {
+            val storageReference = storage.reference.child("images/$username/$username.jpg")
+            storageReference.downloadUrl.await()
+        } catch (e: Exception){
+            Log.d(TAG,e.message.toString())
+            null
+        }
     }
-
-//    suspend fun updatePhoto(bitmap: Bitmap, username: String){
-//        val storageReference = storage.reference.child("images/$username/$username.jpg")
-//        storageReference.putBytes(ImageParser.bitMapToByteArray(bitmap)).await()
-//    }
 
     suspend fun updatePhoto(imageUri: Uri, username: String){
         val storageReference = storage.reference.child("images/$username/$username.jpg")

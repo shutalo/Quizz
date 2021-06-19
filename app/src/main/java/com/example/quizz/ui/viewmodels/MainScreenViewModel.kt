@@ -59,7 +59,7 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
         return repository.getCurrentUser()
     }
 
-    private suspend fun getCurrentUserObject(): User?{
+    suspend fun getCurrentUserObject(): User?{
         return repository.getCurrentUserObject()
     }
 
@@ -112,15 +112,6 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
             _imageUpdated.postValue(image)
         }
     }
-
-//    fun updatePhoto(bitmap: Bitmap){
-//        viewModelScope.launch {
-//            _photoUploadStarted.postValue(true)
-//            repository.updatePhoto(bitmap,getCurrentUserObject()?.username!!)
-//            _photoUploadStarted.postValue(false)
-//            getPhoto()
-//        }
-//    }
 
     fun updatePhoto(imageUri: Uri){
         viewModelScope.launch {

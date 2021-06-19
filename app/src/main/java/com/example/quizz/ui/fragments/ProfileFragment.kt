@@ -2,7 +2,9 @@ package com.example.quizz.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,21 +73,16 @@ class ProfileFragment() : Fragment() {
         }
 
         viewModel.imageUpdated.observe(viewLifecycleOwner){
-            if(it != null /*&& !ImageParser.bitMapToByteArray(it).contentEquals(ImageParser.bitMapToByteArray(BitmapFactory.decodeResource(Quizz.context.resources,R.drawable.profile_photo)))*/){
+            if(it != null){
                 binding.editProfileImageIv.setImageResource(R.drawable.ic_pen)
-//                val img = RoundedBitmapDrawableFactory.create(resources,it)
-//                img.isCircular = true
-//                binding.profileImageIv.setImageDrawable(img)
-                val theme = resources.newTheme()
-                Glide.with(binding.root)
-                    .load(it)
-                    .placeholder(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,theme))
-                    .circleCrop()
-                    .into(binding.profileImageIv)
             } else {
-                val theme = resources.newTheme()
-                binding.profileImageIv.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,theme))
+                binding.editProfileImageIv.setImageResource(R.drawable.ic_camera)
             }
+            Glide.with(binding.root)
+                .load(it)
+                .placeholder(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,resources.newTheme()))
+                .circleCrop()
+                .into(binding.profileImageIv)
         }
 
         viewModel.photoUploadStarted.observe(viewLifecycleOwner){

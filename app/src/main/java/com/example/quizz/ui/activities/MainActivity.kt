@@ -1,32 +1,35 @@
 package com.example.quizz.ui.activities
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Bitmap.createScaledBitmap
-import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.ArrayMap
 import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.createBitmap
+import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.quizz.R
 import com.example.quizz.data.model.User
-import com.example.quizz.data.repository.Repository
 import com.example.quizz.databinding.ActivityMainBinding
 import com.example.quizz.ui.adapters.MainScreenPagerAdapter
 import com.example.quizz.ui.viewmodels.MainScreenViewModel
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,12 +37,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModel<MainScreenViewModel>()
     private var firstTimeStartedFlag = true
+    private lateinit var username: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         this.supportActionBar?.hide()
+
+        username = intent.extras?.getParcelable<User>("user")?.username!!
 
         setUpViewPager()
         setUpTabLayout()
@@ -76,12 +82,24 @@ class MainActivity : AppCompatActivity() {
         tabLayoutMediator.attach()
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode != Activity.RESULT_CANCELED){
             if(requestCode == MainScreenViewModel.REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK){
-//                val bitmap: Bitmap = data?.extras?.get("data") as Bitmap
-//                viewModel.updatePhoto(createScaledBitmap(bitmap,150,150,true))
+                CoroutineScope(Dispatchers.IO).launch {
+                    try{
+                        val file = createFile(username)
+                        val out = FileOutputStream(file)
+                        (data?.extras?.get("data") as Bitmap).compress(Bitmap.CompressFormat.JPEG, 100, out)
+                        out.flush()
+                        out.close()
+                        viewModel.updatePhoto(Uri.fromFile(file))
+                    } catch (e: Exception){
+                        Log.d(TAG,e.message.toString())
+                    }
+                }
+
             } else if(requestCode == MainScreenViewModel.REQUEST_SELECT_IMAGE_IN_ALBUM && resultCode == Activity.RESULT_OK){
                 val imageUri = data?.data
                 if (imageUri != null) {
@@ -91,6 +109,33 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun createFile(username: String): File{
+        val timestamp = SimpleDateFormat.getDateTimeInstance().format(Date())
+        Log.d(TAG,timestamp)
+        val storageDir = getExternalFilesDir(null)
+        val dir = File(storageDir?.absolutePath + "/images")
+        if(!dir.exists()){
+            dir.mkdir()
+        }
+        val photo = File(dir,"$username.jpg")
+        try {
+            val permissionCheck = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                if (!photo.createNewFile()) {
+                    Log.d(TAG, "This file is already exist: " + photo.absolutePath)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        val imagePath = photo.absolutePath
+        Log.d(TAG,imagePath)
+        return photo
+    }
+
     override fun onResume() {
         super.onResume()
         CoroutineScope(Dispatchers.IO).launch {
@@ -98,5 +143,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun getCurrentUsersUsername(): String{
+        return username
+    }
 
 }
