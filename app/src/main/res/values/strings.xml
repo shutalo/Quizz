@@ -31,4 +31,8 @@
     <string name="fragment_profile_delete_account">Delete your precious account.</string>
     <string name="fragment_dialog_delete_account_title">Are you sure?</string>
     <string name="fragment_game_next">Next</string>
+    <string name="fragment_dialog_rules_title">Rules</string>
+    <string name="fragment_dialog_rule_1">Answers a question in 30 seconds!</string>
+    <string name="fragment_dialog_rule_2">Every correct answer brings you point!</string>
+    <string name="fragment_dialog_rule_3">One wrong answer and the game is over!</string>
 </resources>

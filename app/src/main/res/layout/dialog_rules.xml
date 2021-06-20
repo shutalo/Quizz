@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftGuideline"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintGuide_begin="24dp"
+        android:orientation="vertical">
+    </androidx.constraintlayout.widget.Guideline>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuideline"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintGuide_end="24dp"
+        android:orientation="vertical">
+    </androidx.constraintlayout.widget.Guideline>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="370dp"
+        android:layout_height="300dp"
+        app:layout_constraintLeft_toLeftOf="@id/leftGuideline"
+        app:layout_constraintRight_toRightOf="@id/rightGuideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/dialog_style"
+        >
+
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_dialog_rules_title"
+            style="@style/TextAppearance.Title"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/rule_1_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_dialog_rule_1"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            style="@style/rules"
+            app:layout_constraintTop_toBottomOf="@id/title_tv"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/rule_2_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_dialog_rule_2"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            style="@style/rules"
+            app:layout_constraintTop_toBottomOf="@id/rule_1_tv"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/rule_3_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_dialog_rule_3"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            style="@style/rules"
+            app:layout_constraintTop_toBottomOf="@id/rule_2_tv"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_rules_x"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+        />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
