@@ -22,7 +22,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="370dp"
-        android:layout_height="300dp"
+        android:layout_height="265dp"
         app:layout_constraintLeft_toLeftOf="@id/leftGuideline"
         app:layout_constraintRight_toRightOf="@id/rightGuideline"
         app:layout_constraintTop_toTopOf="parent"
@@ -76,6 +76,7 @@
             app:layout_constraintLeft_toLeftOf="parent"/>
 
         <ImageView
+            android:id="@+id/exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"

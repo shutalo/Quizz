@@ -18,6 +18,7 @@ import com.example.quizz.R
 import com.example.quizz.data.model.User
 import com.example.quizz.databinding.ActivityMainBinding
 import com.example.quizz.ui.adapters.MainScreenPagerAdapter
+import com.example.quizz.ui.fragments.MainFragment
 import com.example.quizz.ui.viewmodels.MainScreenViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         this.supportActionBar?.hide()
 
-        username = intent.extras?.getParcelable<User>("user")?.username!!
+//        username = intent.extras?.getParcelable<User>("user")?.username!!
 
         setUpViewPager()
         setUpTabLayout()
@@ -69,7 +70,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpViewPager(){
         binding.viewPager.adapter = MainScreenPagerAdapter(this)
-        binding.viewPager.setCurrentItem(1,false)
+        Log.d(TAG,intent.extras?.getBoolean("leaderboard").toString())
+        if(intent.extras?.getBoolean("leaderboard") == true){
+            binding.viewPager.setCurrentItem(0,false)
+        } else {
+            binding.viewPager.setCurrentItem(1,false)
+        }
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL;
         binding.viewPager.isUserInputEnabled = true
     }

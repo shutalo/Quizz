@@ -3,6 +3,7 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/aguafina_script</item>
         <item>@font/poppins</item>
+        <item>@font/raleway</item>
         <item>@font/righteous</item>
     </array>
 </resources>

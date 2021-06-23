@@ -29,12 +29,13 @@
         app:layout_constraintLeft_toRightOf="@id/leftGuideline"
         app:layout_constraintRight_toLeftOf="@id/rightGuideline"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/progress_bar_time"
-        android:max="30"
+        android:max="30000"
         android:min="0"
-        android:progress="1"
+        android:progress="30000"
         android:indeterminate="false"
         android:layout_marginTop="20dp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/progressbar_time"
         />
 
     <ImageView
@@ -134,9 +135,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/pink2"/>
-<!--                android:background="@null"-->
-<!--                android:button="@drawable/radio_button_background"-->
-                android:layout_gravity="end" />
+            <!--                android:background="@null"-->
+            <!--                android:button="@drawable/radio_button_background"-->
+            android:layout_gravity="end" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

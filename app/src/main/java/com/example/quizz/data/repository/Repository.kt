@@ -191,4 +191,15 @@ class Repository() {
         val storageReference = storage.reference.child("images/$username/$username.jpg")
         storageReference.putBytes(ImageParser.bitMapToByteArray(BitmapFactory.decodeResource(Quizz.context.resources,R.drawable.profile_photo))).await()
     }
+
+    suspend fun getHighScore(): Int{
+        val user = database.collection("users").document(getCurrentUser().uid).get().await().toObject(User::class.java)
+        return user?.highScore!!
+    }
+
+    fun updateHighScore(score: Int){
+        val highScore = HashMap<String,Int>()
+        highScore["highScore"] = score
+        database.collection("users").document(getCurrentUser().uid).set(highScore)
+    }
 }

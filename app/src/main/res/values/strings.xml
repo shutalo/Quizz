@@ -35,4 +35,8 @@
     <string name="fragment_dialog_rule_1">Answers a question in 30 seconds!</string>
     <string name="fragment_dialog_rule_2">Every correct answer brings you point!</string>
     <string name="fragment_dialog_rule_3">One wrong answer and the game is over!</string>
+    <string name="fragment_game_over_title">Game over!</string>
+    <string name="fragment_game_over_description">Hooraay! Your final score is</string>
+    <string name="fragment_game_over_play_again">Play again</string>
+    <string name="fragment_game_over_leaderboard">Leaderboard</string>
 </resources>
