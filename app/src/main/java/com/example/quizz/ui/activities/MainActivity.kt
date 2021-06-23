@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModel<MainScreenViewModel>()
     private var firstTimeStartedFlag = true
-    private lateinit var username: String
+    private var username: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +46,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         this.supportActionBar?.hide()
 
-//        username = intent.extras?.getParcelable<User>("user")?.username!!
+        //viewModel.getUserFromRoomDatabase()
+        //sredit jebeni flow/coroutine database access
 
         setUpViewPager()
         setUpTabLayout()
 
         viewModel.topThreePlayers.observe(this){
             binding.progressBar.visibility = View.GONE
+        }
+        viewModel.user.observe(this){
+            username = it.username
         }
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){

@@ -14,7 +14,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
     private val viewModel by viewModel<GameViewModel>()
     private var gameFragment: GameFragment = GameFragment.getInstance()
-    private val gameOverFragment: GameOverFragment = GameOverFragment.getInstance()
+    private  var gameOverFragment: GameOverFragment = GameOverFragment.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,10 +22,10 @@ class GameActivity : AppCompatActivity() {
         setContentView(binding.root)
         this.supportActionBar?.hide()
         gameFragment.setUpGameOverListener {
+            //zasto moram novi fragment kreirat a ne iskoristit postojeci
             supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id,gameOverFragment).commit()
         }
         gameOverFragment.setUpPlayAgainButtonListener {
-            gameFragment = GameFragment.getInstance()
             supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id,gameFragment).commit()
         }
         gameOverFragment.setUpLeaderboardButtonListener {

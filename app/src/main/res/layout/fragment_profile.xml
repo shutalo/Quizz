@@ -176,13 +176,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/fragment_profile_delete_account"
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="25dp"
         android:textSize="14sp"
         android:textColor="@color/dark_red"
         app:layout_constraintLeft_toRightOf="@id/leftGuideline"
         app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/sign_out_btn" />
+        app:layout_constraintTop_toBottomOf="@id/sign_out_btn"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
     <ProgressBar

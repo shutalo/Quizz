@@ -9,16 +9,23 @@ import android.widget.Toast
 import com.example.quizz.Quizz
 import com.example.quizz.R
 import com.example.quizz.data.model.User
+import com.example.quizz.data.room.Dao
 import com.example.quizz.helpers.ImageParser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.File
+import java.util.concurrent.Flow
 import kotlin.collections.HashMap
 
-class Repository() {
+class Repository(private val dao: Dao) {
 
     private val TAG = "Repository"
 
@@ -26,22 +33,24 @@ class Repository() {
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val storage = FirebaseStorage.getInstance("gs://quizz-77a0e.appspot.com")
 
+
+    fun getUser(): kotlinx.coroutines.flow.Flow<User> = flow<User>{
+        CoroutineScope(Dispatchers.IO).launch {
+            emit(dao.getUser())
+        }
+    }
+    fun delete(user: User) = dao.deleteUser(user)
+
     suspend fun register(email: String, password: String): Boolean{
         var isRegistrationSuccessful = false
         try {
-            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val highScore = HashMap<String,Int>()
-                    highScore["highScore"] = 0
-                    database.collection("users").document(getCurrentUser().uid).set(highScore)
-                    Log.d(TAG,"User added to database")
-                    isRegistrationSuccessful = true
-                    Toast.makeText(Quizz.context, "Registered successfully!", Toast.LENGTH_SHORT).show()
-                }
-            }.addOnFailureListener {
-                Log.d(TAG,it.message.toString())
-                Toast.makeText(Quizz.context, it.message.toString(), Toast.LENGTH_SHORT).show()
-            }.await()
+            mAuth.createUserWithEmailAndPassword(email,password).await()
+            val highScore = HashMap<String,Int>()
+            highScore["highScore"] = 0
+            database.collection("users").document(getCurrentUser().uid).set(highScore)
+            Log.d(TAG,"User added to database")
+            isRegistrationSuccessful = true
+            Toast.makeText(Quizz.context, "Registered successfully!", Toast.LENGTH_SHORT).show()
         } catch (e: java.lang.Exception){
             Log.d(TAG,e.message.toString())
         }
@@ -52,15 +61,9 @@ class Repository() {
         var signingSuccessful: Boolean = false
         if(email != "" && password != ""){
             try {
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        Log.d(TAG, "signed in successfully!")
-                        signingSuccessful = true
-                    }
-                }.addOnFailureListener {
-                    Log.d(TAG, it.message.toString())
-                    Toast.makeText(Quizz.context, it.message.toString(), Toast.LENGTH_SHORT).show()
-                }.await()
+                mAuth.signInWithEmailAndPassword(email, password).await()
+                signingSuccessful = true
+                putUserToRoomDatabase()
             } catch (e: Exception){
                 Log.d(TAG,e.message.toString())
             }
@@ -68,7 +71,8 @@ class Repository() {
         return signingSuccessful
     }
 
-    fun signOut(){
+    suspend fun signOut(){
+        dao.deleteUser(getCurrentUserObject()!!)
         mAuth.signOut()
     }
 
@@ -100,11 +104,18 @@ class Repository() {
     suspend fun chooseUsername(username: String): Boolean{
         return if(checkIfUsernameIsAvailable(username)){
             database.collection("users").document(getCurrentUser().uid).update("username",username).await()
+            putUserToRoomDatabase()
             //updateInitialPhoto(username)
             true
         } else {
             Toast.makeText(Quizz.context,"Username unavailable!",Toast.LENGTH_SHORT).show()
             false
+        }
+    }
+
+    private suspend fun putUserToRoomDatabase() {
+        CoroutineScope(Dispatchers.IO).launch {
+            dao.insert(database.collection("users").document(getCurrentUser().uid).get().await().toObject(User::class.java)!!)
         }
     }
 

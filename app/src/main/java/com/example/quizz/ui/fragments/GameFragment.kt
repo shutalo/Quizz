@@ -24,8 +24,6 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.startTimer()
-
         viewModel.countDownTick.observe(viewLifecycleOwner){
             binding.timeProgressbar.progress = it
         }
@@ -50,6 +48,11 @@ class GameFragment : Fragment() {
 
     fun setUpGameOverListener(listener: ()->Unit){
         this.gameOverListener = listener
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.startTimer()
     }
 
     companion object{

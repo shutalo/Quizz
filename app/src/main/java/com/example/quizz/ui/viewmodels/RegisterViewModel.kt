@@ -8,6 +8,7 @@ import com.example.quizz.data.model.User
 import com.example.quizz.data.repository.Repository
 import com.example.quizz.ui.activities.WelcomeActivity
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

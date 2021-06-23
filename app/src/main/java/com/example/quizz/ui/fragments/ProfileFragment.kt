@@ -40,8 +40,10 @@ class ProfileFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.signOutBtn.setOnClickListener{
-            viewModel.signOut()
-            startWelcomeActivity()
+            CoroutineScope(Dispatchers.IO).launch {
+                viewModel.signOut()
+                startWelcomeActivity()
+            }
         }
 
         binding.changePasswordButton.setOnClickListener{
@@ -67,8 +69,10 @@ class ProfileFragment() : Fragment() {
 
         viewModel.accountDeleted.observe(viewLifecycleOwner){
             if(it){
-                viewModel.signOut()
-                startWelcomeActivity()
+                CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.signOut()
+                    startWelcomeActivity()
+                }
             }
         }
 

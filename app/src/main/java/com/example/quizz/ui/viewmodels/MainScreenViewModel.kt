@@ -26,7 +26,9 @@ import com.example.quizz.ui.activities.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.dialog_profile_image.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import java.net.URI
@@ -44,6 +46,8 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
     var imageUpdated: LiveData<Uri?> = _imageUpdated
     private var _photoUploadStarted: MutableLiveData<Boolean> = MutableLiveData(false)
     var photoUploadStarted: LiveData<Boolean> = _photoUploadStarted
+    private var _user: MutableLiveData<User> = MutableLiveData()
+    var user: LiveData<User> = _user
 
     fun getPlayersForRecyclerView(){
         viewModelScope.launch {
@@ -53,6 +57,15 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
         viewModelScope.launch {
             _topThreePlayers.postValue(repository.getTopThreePlayers())
         }
+    }
+
+   suspend fun getUserFromRoomDatabase(){
+//        viewModelScope.launch {
+//
+//        }
+       repository.getUser().collect {
+           _user.postValue(it)
+       }
     }
 
     fun getCurrentUser(): FirebaseUser {
@@ -75,7 +88,7 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
         }
     }
 
-    fun signOut(){
+    suspend fun signOut(){
         repository.signOut()
     }
 

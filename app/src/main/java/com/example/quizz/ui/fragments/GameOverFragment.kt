@@ -1,5 +1,6 @@
 package com.example.quizz.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,13 +24,6 @@ class GameOverFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.playAgainButton.setOnClickListener{
-            playAgainButtonListener?.invoke()
-        }
-        binding.leaderboardButton.setOnClickListener{
-            leaderboardButtonListener?.invoke()
-        }
     }
 
     fun setUpPlayAgainButtonListener(listener: ()->Unit){
@@ -38,6 +32,16 @@ class GameOverFragment: Fragment() {
 
     fun setUpLeaderboardButtonListener(listener: ()->Unit){
         this.leaderboardButtonListener = listener
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.playAgainButton.setOnClickListener{
+            playAgainButtonListener?.invoke()
+        }
+        binding.leaderboardButton.setOnClickListener{
+            leaderboardButtonListener?.invoke()
+        }
     }
 
     companion object{
