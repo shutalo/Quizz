@@ -34,12 +34,21 @@ class Repository(private val dao: Dao) {
     private val storage = FirebaseStorage.getInstance("gs://quizz-77a0e.appspot.com")
 
 
-    fun getUser(): kotlinx.coroutines.flow.Flow<User> = flow<User>{
-        CoroutineScope(Dispatchers.IO).launch {
-            emit(dao.getUser())
-        }
+    fun getUser(): User {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            emit(dao.getUser())
+//        }
+        Log.d(TAG,dao.getUser().username)
+        return dao.getUser()
     }
     fun delete(user: User) = dao.deleteUser(user)
+
+    private suspend fun putUserToRoomDatabase() {
+        CoroutineScope(Dispatchers.IO).launch {
+            Log.d(TAG,getCurrentUserObject()?.username!!)
+            dao.insert(getCurrentUserObject()!!)
+        }
+    }
 
     suspend fun register(email: String, password: String): Boolean{
         var isRegistrationSuccessful = false
@@ -110,12 +119,6 @@ class Repository(private val dao: Dao) {
         } else {
             Toast.makeText(Quizz.context,"Username unavailable!",Toast.LENGTH_SHORT).show()
             false
-        }
-    }
-
-    private suspend fun putUserToRoomDatabase() {
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.insert(database.collection("users").document(getCurrentUser().uid).get().await().toObject(User::class.java)!!)
         }
     }
 

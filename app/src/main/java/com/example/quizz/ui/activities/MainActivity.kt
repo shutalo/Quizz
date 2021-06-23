@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         this.supportActionBar?.hide()
 
-        //viewModel.getUserFromRoomDatabase()
+        viewModel.getUserFromRoomDatabase()
         //sredit jebeni flow/coroutine database access
 
         setUpViewPager()
@@ -56,7 +56,11 @@ class MainActivity : AppCompatActivity() {
             binding.progressBar.visibility = View.GONE
         }
         viewModel.user.observe(this){
-            username = it.username
+            if(it != null){
+                this.username = it.username
+                Log.d(TAG,it.username + "boktejebo")
+                Log.d(TAG,"BOKTEJEBO")
+            }
         }
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
@@ -74,7 +78,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpViewPager(){
         binding.viewPager.adapter = MainScreenPagerAdapter(this)
-        Log.d(TAG,intent.extras?.getBoolean("leaderboard").toString())
         if(intent.extras?.getBoolean("leaderboard") == true){
             binding.viewPager.setCurrentItem(0,false)
         } else {

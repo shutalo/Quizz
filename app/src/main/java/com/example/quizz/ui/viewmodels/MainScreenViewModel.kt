@@ -58,14 +58,15 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
             _topThreePlayers.postValue(repository.getTopThreePlayers())
         }
     }
-
-   suspend fun getUserFromRoomDatabase(){
+    fun getUserFromRoomDatabase(){
 //        viewModelScope.launch {
 //
 //        }
-       repository.getUser().collect {
-           _user.postValue(it)
-       }
+//       repository.getUser().collect {
+//           Log.d(TAG,it.username)
+//           _user.postValue(it)
+//       }
+        _user.postValue(repository.getUser())
     }
 
     fun getCurrentUser(): FirebaseUser {
