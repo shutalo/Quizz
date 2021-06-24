@@ -30,6 +30,10 @@ class LeaderboardRecyclerViewAdapter(private var players: List<User>): RecyclerV
             holder.itemView.position.setTextColor(Quizz.context.resources.getColor(R.color.white,Quizz.context.resources.newTheme()))
             holder.bind(players[position],position)
         } else {
+            holder.itemView.player_name.setTextColor(Quizz.context.resources.getColor(R.color.white,Quizz.context.resources.newTheme()))
+            holder.itemView.player_high_score.setTextColor(Quizz.context.resources.getColor(R.color.white,Quizz.context.resources.newTheme()))
+            holder.itemView.player_position_iv.setImageResource(R.drawable.recyclerview_item_image)
+            holder.itemView.position.setTextColor(Quizz.context.resources.getColor(R.color.white,Quizz.context.resources.newTheme()))
             holder.bind(players[position],position)
         }
     }

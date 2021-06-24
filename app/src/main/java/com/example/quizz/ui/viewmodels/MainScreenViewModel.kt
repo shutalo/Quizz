@@ -26,9 +26,8 @@ import com.example.quizz.ui.activities.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.dialog_profile_image.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import java.net.URI
@@ -59,21 +58,10 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
         }
     }
     fun getUserFromRoomDatabase(){
-//        viewModelScope.launch {
-//
-//        }
-//       repository.getUser().collect {
-//           Log.d(TAG,it.username)
-//           _user.postValue(it)
-//       }
-        _user.postValue(repository.getUser())
+        _user.value = repository.getUserFromRoomDatabase()
     }
 
-    fun getCurrentUser(): FirebaseUser {
-        return repository.getCurrentUser()
-    }
-
-    suspend fun getCurrentUserObject(): User?{
+    suspend fun getCurrentUserObject(): User{
         return repository.getCurrentUserObject()
     }
 
@@ -98,7 +86,6 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
             val bottomSheetDialog: BottomSheetDialog = BottomSheetDialog(activity)
             bottomSheetDialog.setContentView(R.layout.dialog_profile_image)
             bottomSheetDialog.take_photo.setOnClickListener {
-                Toast.makeText(activity,"Take photo!",Toast.LENGTH_SHORT).show()
                 bottomSheetDialog.dismiss()
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 if (intent.resolveActivity(Quizz.context.packageManager) != null) {
@@ -107,8 +94,7 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
                      Log.d(TAG,"Photo could not be taken!")
                 }
             }
-            bottomSheetDialog.choose_from_gallery.setOnClickListener {
-                Toast.makeText(activity,"Choose from gallery!",Toast.LENGTH_SHORT).show()
+            bottomSheetDialog.gallery.setOnClickListener {
                 bottomSheetDialog.dismiss()
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
                 intent.type = "image/*"
@@ -122,7 +108,7 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
 
     suspend fun getPhoto(){
         viewModelScope.launch {
-            val image = repository.getPhoto(getCurrentUserObject()?.username!!)
+            val image = repository.getPhoto(getCurrentUserObject().username)
             _imageUpdated.postValue(image)
         }
     }
@@ -130,9 +116,9 @@ class MainScreenViewModel(private val repository: Repository): ViewModel() {
     fun updatePhoto(imageUri: Uri){
         viewModelScope.launch {
             _photoUploadStarted.postValue(true)
-            repository.updatePhoto(imageUri,getCurrentUserObject()?.username!!)
-            _photoUploadStarted.postValue(false)
+            repository.updatePhoto(imageUri,getCurrentUserObject().username)
             getPhoto()
+            _photoUploadStarted.postValue(false)
         }
     }
 

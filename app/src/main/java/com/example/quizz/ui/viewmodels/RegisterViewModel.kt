@@ -28,7 +28,6 @@ class RegisterViewModel(private val repository: Repository) : ViewModel() {
     private var _isUsernameChosen: MutableLiveData<Boolean> = MutableLiveData(false)
     var isUsernameChosen: LiveData<Boolean> = _isUsernameChosen
 
-
     fun register(email: String, password: String){
         viewModelScope.launch {
             if(email != "" && password != "" && email.contains("@") && email.endsWith(".com") && !email.endsWith("@.com")){

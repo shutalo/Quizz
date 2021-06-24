@@ -23,13 +23,15 @@ class GameViewModel(private val repository: Repository) : ViewModel() {
 
     fun startTimer(){
         viewModelScope.launch {
-            val timer = object: CountDownTimer(30000, 10) {
+            val timer = object: CountDownTimer(10000, 10) {
                 override fun onTick(millisUntilFinished: Long) {
                     _countDownTick.postValue(millisUntilFinished.toInt())
                     _secondsLeft.postValue(ceil((millisUntilFinished.toDouble() / 1000)).toInt())
                 }
                 override fun onFinish() {
                     _secondsLeft.postValue(0)
+                    _secondsLeft = MutableLiveData()
+                    secondsLeft = _secondsLeft
                 }
             }
             timer.start()
@@ -49,5 +51,9 @@ class GameViewModel(private val repository: Repository) : ViewModel() {
         _questionAnswered.postValue(true)
         score++
         //get question from api
+    }
+
+    fun questionAnswered(answer: Int){
+
     }
 }

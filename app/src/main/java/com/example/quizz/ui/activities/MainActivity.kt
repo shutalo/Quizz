@@ -24,15 +24,17 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity() : AppCompatActivity(){
 
     private val TAG = "MainActivity"
     private lateinit var binding: ActivityMainBinding
@@ -47,19 +49,17 @@ class MainActivity : AppCompatActivity() {
         this.supportActionBar?.hide()
 
         viewModel.getUserFromRoomDatabase()
-        //sredit jebeni flow/coroutine database access
 
-        setUpViewPager()
-        setUpTabLayout()
 
         viewModel.topThreePlayers.observe(this){
             binding.progressBar.visibility = View.GONE
         }
+
         viewModel.user.observe(this){
             if(it != null){
                 this.username = it.username
-                Log.d(TAG,it.username + "boktejebo")
-                Log.d(TAG,"BOKTEJEBO")
+                setUpViewPager()
+                setUpTabLayout()
             }
         }
 

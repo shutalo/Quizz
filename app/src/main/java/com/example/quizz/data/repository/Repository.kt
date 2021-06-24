@@ -1,7 +1,5 @@
 package com.example.quizz.data.repository
 
-import android.content.ContentResolver
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
@@ -14,15 +12,10 @@ import com.example.quizz.helpers.ImageParser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.DisposableHandle
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.io.File
-import java.util.concurrent.Flow
+import org.koin.core.component.getScopeId
 import kotlin.collections.HashMap
 
 class Repository(private val dao: Dao) {
@@ -33,21 +26,12 @@ class Repository(private val dao: Dao) {
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val storage = FirebaseStorage.getInstance("gs://quizz-77a0e.appspot.com")
 
-
-    fun getUser(): User {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            emit(dao.getUser())
-//        }
-        Log.d(TAG,dao.getUser().username)
+    fun getUserFromRoomDatabase(): User {
         return dao.getUser()
     }
     fun delete(user: User) = dao.deleteUser(user)
-
     private suspend fun putUserToRoomDatabase() {
-        CoroutineScope(Dispatchers.IO).launch {
-            Log.d(TAG,getCurrentUserObject()?.username!!)
-            dao.insert(getCurrentUserObject()!!)
-        }
+        dao.insert(getCurrentUserObject()!!)
     }
 
     suspend fun register(email: String, password: String): Boolean{
@@ -57,31 +41,30 @@ class Repository(private val dao: Dao) {
             val highScore = HashMap<String,Int>()
             highScore["highScore"] = 0
             database.collection("users").document(getCurrentUser().uid).set(highScore)
-            Log.d(TAG,"User added to database")
+            Log.d(TAG + "register","User added to database")
             isRegistrationSuccessful = true
             Toast.makeText(Quizz.context, "Registered successfully!", Toast.LENGTH_SHORT).show()
         } catch (e: java.lang.Exception){
-            Log.d(TAG,e.message.toString())
+            Log.d(TAG + "register",e.message.toString())
         }
         return isRegistrationSuccessful
     }
 
     suspend fun signIn(email: String, password: String): Boolean{
         var signingSuccessful: Boolean = false
-        if(email != "" && password != ""){
-            try {
-                mAuth.signInWithEmailAndPassword(email, password).await()
-                signingSuccessful = true
-                putUserToRoomDatabase()
-            } catch (e: Exception){
-                Log.d(TAG,e.message.toString())
-            }
+        try {
+            mAuth.signInWithEmailAndPassword(email, password).await()
+            signingSuccessful = true
+            putUserToRoomDatabase()
+        } catch (e: Exception){
+            Log.d(TAG + "sign in",e.message.toString())
+            Toast.makeText(Quizz.context,"Wrong username or password",Toast.LENGTH_SHORT).show()
         }
         return signingSuccessful
     }
 
     suspend fun signOut(){
-        dao.deleteUser(getCurrentUserObject()!!)
+        dao.deleteUser(getCurrentUserObject())
         mAuth.signOut()
     }
 
@@ -114,7 +97,6 @@ class Repository(private val dao: Dao) {
         return if(checkIfUsernameIsAvailable(username)){
             database.collection("users").document(getCurrentUser().uid).update("username",username).await()
             putUserToRoomDatabase()
-            //updateInitialPhoto(username)
             true
         } else {
             Toast.makeText(Quizz.context,"Username unavailable!",Toast.LENGTH_SHORT).show()
@@ -122,16 +104,20 @@ class Repository(private val dao: Dao) {
         }
     }
 
-    suspend fun getCurrentUserObject(): User?{
+    suspend fun getCurrentUserObject(): User {
         val user = database.collection("users").document(getCurrentUser().uid).get().await()
-        return user.toObject(User::class.java)
+        return User(
+            username = user.getField<String>("username")!!,
+            highScore = user.getField<Int>("highScore")!!
+        )
     }
 
     suspend fun getPlayersForRecyclerView(): List<User>{
         val users: MutableList<User> = mutableListOf()
         val players = database.collection("users").get().await()
         players.forEach {
-            users.add(it.toObject(User::class.java))
+            val user = User(it.getField<String>("username")!!,it.getField<Int>("highScore")!!)
+            users.add(user)
         }
         users.sortByDescending {
             it.highScore
@@ -148,14 +134,15 @@ class Repository(private val dao: Dao) {
         val users: MutableList<User> = mutableListOf()
         val players = database.collection("users").get().await()
         players.forEach {
-            users.add(it.toObject(User::class.java))
+            val user = User(it.getField<String>("username")!!,it.getField<Int>("highScore")!!)
+            users.add(user)
         }
         users.sortByDescending {
             it.highScore
         }
         val topThreePlayers = mutableListOf<User>()
         for(i in 0..2){
-            users[i].photo = getPhoto(users[i].username!!)
+            users[i].photo = getPhoto(users[i].username)
             topThreePlayers.add(users[i])
         }
         return topThreePlayers
@@ -176,10 +163,12 @@ class Repository(private val dao: Dao) {
 
     suspend fun deleteAccount(): Boolean{
         try {
-            storage.reference.child("images/${getCurrentUserObject()?.username}/${getCurrentUserObject()?.username}.jpg").delete().await()
+            if(checkIfImageExistsInFirebaseStorage(getCurrentUserObject().username)){
+                storage.reference.child("images/${getCurrentUserObject().username}/${getCurrentUserObject().username}.jpg").delete().await()
+            }
             database.collection("users").document(getCurrentUser().uid).delete().await()
         } catch (e: Exception){
-            Log.d(TAG,e.message.toString())
+            Log.d(TAG + "delete acc",e.message.toString())
         }
         getCurrentUser().delete().await()
         Toast.makeText(Quizz.context,"Account deleted.",Toast.LENGTH_SHORT).show()
@@ -188,12 +177,31 @@ class Repository(private val dao: Dao) {
 
     suspend fun getPhoto(username: String): Uri? {
         return try {
-            val storageReference = storage.reference.child("images/$username/$username.jpg")
-            storageReference.downloadUrl.await()
+            if(checkIfImageExistsInFirebaseStorage(username)){
+                var storageReference = storage.reference.child("images/${username}/${username}.jpg")
+                return storageReference.downloadUrl.await()
+            }
+            null
         } catch (e: Exception){
-            Log.d(TAG,e.message.toString())
+            Log.d(TAG + "getPhoto",e.message.toString())
             null
         }
+    }
+
+    private suspend fun checkIfImageExistsInFirebaseStorage(username: String): Boolean{
+        val users = mutableListOf<String>()
+        var storageReference = storage.reference
+        storageReference.root.child("images").listAll().await().also { it1 ->
+            it1.prefixes.forEach {
+                users.add(it.toString().substringAfter("images/"))
+            }
+        }
+        users.forEach {
+            if(it == username) {
+                return true
+            }
+        }
+        return false
     }
 
     suspend fun updatePhoto(imageUri: Uri, username: String){
@@ -201,14 +209,8 @@ class Repository(private val dao: Dao) {
         storageReference.putFile(imageUri).await()
     }
 
-    private suspend fun updateInitialPhoto(username: String){
-        val storageReference = storage.reference.child("images/$username/$username.jpg")
-        storageReference.putBytes(ImageParser.bitMapToByteArray(BitmapFactory.decodeResource(Quizz.context.resources,R.drawable.profile_photo))).await()
-    }
-
     suspend fun getHighScore(): Int{
-        val user = database.collection("users").document(getCurrentUser().uid).get().await().toObject(User::class.java)
-        return user?.highScore!!
+        return getCurrentUserObject().highScore
     }
 
     fun updateHighScore(score: Int){

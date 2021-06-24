@@ -14,32 +14,16 @@ class GameActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGameBinding
     private val viewModel by viewModel<GameViewModel>()
     private var gameFragment: GameFragment = GameFragment.getInstance()
-    private  var gameOverFragment: GameOverFragment = GameOverFragment.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         this.supportActionBar?.hide()
-        gameFragment.setUpGameOverListener {
-            //zasto moram novi fragment kreirat a ne iskoristit postojeci
-            supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id,gameOverFragment).commit()
-        }
-        gameOverFragment.setUpPlayAgainButtonListener {
-            supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id,gameFragment).commit()
-        }
-        gameOverFragment.setUpLeaderboardButtonListener {
-            switchToLeaderboardScreen()
-        }
 
-        supportFragmentManager.beginTransaction().replace(binding.fragmentContainer.id,gameFragment).commit()
+        supportFragmentManager.beginTransaction().replace(binding.gameActivityFragmentContainer.id,gameFragment).commit()
     }
 
-    private fun switchToLeaderboardScreen(){
-        val intent = Intent(this,MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK  or Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra("leaderboard",true)
-        startActivity(intent)
-    }
+
 
 }

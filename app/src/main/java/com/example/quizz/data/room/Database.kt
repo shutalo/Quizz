@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.example.quizz.data.model.User
 import com.example.quizz.helpers.Converters
 
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class Database: RoomDatabase() {
     abstract fun dao(): Dao

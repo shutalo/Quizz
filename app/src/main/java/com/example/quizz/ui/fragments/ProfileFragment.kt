@@ -70,7 +70,6 @@ class ProfileFragment() : Fragment() {
         viewModel.accountDeleted.observe(viewLifecycleOwner){
             if(it){
                 CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.signOut()
                     startWelcomeActivity()
                 }
             }
@@ -80,7 +79,7 @@ class ProfileFragment() : Fragment() {
             if(it != null){
                 binding.editProfileImageIv.setImageResource(R.drawable.ic_pen)
             } else {
-                binding.editProfileImageIv.setImageResource(R.drawable.ic_camera)
+                binding.editProfileImageIv.setImageResource(R.drawable.ic_baseline_photo_camera_24)
             }
             Glide.with(binding.root)
                 .load(it)

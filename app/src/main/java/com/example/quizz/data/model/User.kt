@@ -13,9 +13,9 @@ import kotlinx.android.parcel.Parcelize
 data class User(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "username")
-    var username: String = "",
+    var username: String,
     @ColumnInfo(name = "highScore")
-    var highScore: Int? = 0,
+    var highScore: Int,
     @ColumnInfo(name = "photo")
     var photo: Uri? = null
 ) : Parcelable
