@@ -7,7 +7,10 @@ import com.example.quizz.databinding.ActivityGameBinding
 import com.example.quizz.ui.fragments.GameFragment
 import com.example.quizz.ui.fragments.GameOverFragment
 import com.example.quizz.ui.viewmodels.GameViewModel
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.Retrofit
 
 class GameActivity : AppCompatActivity() {
 

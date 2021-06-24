@@ -1,16 +1,21 @@
 package com.example.quizz.ui.viewmodels
 
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quizz.data.model.Question
 import com.example.quizz.data.repository.Repository
+import com.example.quizz.networking.QuestionGenerator
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.math.ceil
 
-class GameViewModel(private val repository: Repository) : ViewModel() {
+class GameViewModel(private val repository: Repository, private val questionGenerator: QuestionGenerator) : ViewModel() {
 
+    private val TAG = "GameViewModel"
 
     private var _countDownTick: MutableLiveData<Int> = MutableLiveData()
     var countDownTick: LiveData<Int> = _countDownTick
@@ -55,5 +60,11 @@ class GameViewModel(private val repository: Repository) : ViewModel() {
 
     fun questionAnswered(answer: Int){
 
+    }
+
+     suspend fun getQuestions(){
+         questionGenerator.getQuestions().collect{
+            Log.d(TAG,it.toString())
+         }
     }
 }

@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment
 import com.example.quizz.R
 import com.example.quizz.databinding.FragmentGameBinding
 import com.example.quizz.ui.viewmodels.GameViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class GameFragment : Fragment() {
@@ -42,6 +45,9 @@ class GameFragment : Fragment() {
         }
 
         binding.nextQuestion.setOnClickListener{
+            CoroutineScope(Dispatchers.IO).launch {
+                viewModel.getQuestions()
+            }
             if(questionAnswered){
                 //get new question and reset timer from viewModel if previous question is answered correctly
             }
