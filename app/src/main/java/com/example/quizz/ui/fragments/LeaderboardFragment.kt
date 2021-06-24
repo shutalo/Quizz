@@ -53,9 +53,9 @@ class LeaderboardFragment: Fragment() {
             binding.playerHighScore1.text = it[0].highScore.toString()
             binding.playerHighScore2.text = it[1].highScore.toString()
             binding.playerHighScore3.text = it[2].highScore.toString()
-            binding.playerName1.text = it[0].username.toString()
-            binding.playerName2.text = it[1].username.toString()
-            binding.playerName3.text = it[2].username.toString()
+            binding.playerName1.text = it[0].username
+            binding.playerName2.text = it[1].username
+            binding.playerName3.text = it[2].username
         }
         setUpRecyclerView()
     }

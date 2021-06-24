@@ -46,6 +46,7 @@ class Repository(private val dao: Dao) {
             Toast.makeText(Quizz.context, "Registered successfully!", Toast.LENGTH_SHORT).show()
         } catch (e: java.lang.Exception){
             Log.d(TAG + "register",e.message.toString())
+            Toast.makeText(Quizz.context,e.message.toString(),Toast.LENGTH_SHORT).show()
         }
         return isRegistrationSuccessful
     }
@@ -108,7 +109,8 @@ class Repository(private val dao: Dao) {
         val user = database.collection("users").document(getCurrentUser().uid).get().await()
         return User(
             username = user.getField<String>("username")!!,
-            highScore = user.getField<Int>("highScore")!!
+            highScore = user.getField<Int>("highScore")!!,
+            photo = getPhoto(user.getField<String>("username")!!)
         )
     }
 
@@ -116,7 +118,7 @@ class Repository(private val dao: Dao) {
         val users: MutableList<User> = mutableListOf()
         val players = database.collection("users").get().await()
         players.forEach {
-            val user = User(it.getField<String>("username")!!,it.getField<Int>("highScore")!!)
+                val user = User(it.getField<String>("username")!!,it.getField<Int>("highScore")!!)
             users.add(user)
         }
         users.sortByDescending {
@@ -164,6 +166,7 @@ class Repository(private val dao: Dao) {
     suspend fun deleteAccount(): Boolean{
         try {
             if(checkIfImageExistsInFirebaseStorage(getCurrentUserObject().username)){
+                delete(getCurrentUserObject())
                 storage.reference.child("images/${getCurrentUserObject().username}/${getCurrentUserObject().username}.jpg").delete().await()
             }
             database.collection("users").document(getCurrentUser().uid).delete().await()
@@ -178,7 +181,7 @@ class Repository(private val dao: Dao) {
     suspend fun getPhoto(username: String): Uri? {
         return try {
             if(checkIfImageExistsInFirebaseStorage(username)){
-                var storageReference = storage.reference.child("images/${username}/${username}.jpg")
+                val storageReference = storage.reference.child("images/${username}/${username}.jpg")
                 return storageReference.downloadUrl.await()
             }
             null
@@ -190,7 +193,7 @@ class Repository(private val dao: Dao) {
 
     private suspend fun checkIfImageExistsInFirebaseStorage(username: String): Boolean{
         val users = mutableListOf<String>()
-        var storageReference = storage.reference
+        val storageReference = storage.reference
         storageReference.root.child("images").listAll().await().also { it1 ->
             it1.prefixes.forEach {
                 users.add(it.toString().substringAfter("images/"))
@@ -207,15 +210,15 @@ class Repository(private val dao: Dao) {
     suspend fun updatePhoto(imageUri: Uri, username: String){
         val storageReference = storage.reference.child("images/$username/$username.jpg")
         storageReference.putFile(imageUri).await()
+        dao.insert(getCurrentUserObject())
     }
 
-    suspend fun getHighScore(): Int{
-        return getCurrentUserObject().highScore
+    fun getHighScore(): Int{
+        return dao.getUser().highScore
     }
 
-    fun updateHighScore(score: Int){
-        val highScore = HashMap<String,Int>()
-        highScore["highScore"] = score
-        database.collection("users").document(getCurrentUser().uid).set(highScore)
+    suspend fun updateHighScore(score: Int){
+        database.collection("users").document(getCurrentUser().uid).update("highScore",score).await()
+        dao.insert(getCurrentUserObject())
     }
 }

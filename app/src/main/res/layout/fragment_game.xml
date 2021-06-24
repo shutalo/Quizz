@@ -67,7 +67,7 @@
         android:id="@+id/question_number"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Question 10"
+        android:text=""
         android:layout_marginTop="80dp"
         android:textSize="20sp"
         android:textColor="@color/white"
@@ -92,7 +92,7 @@
         android:id="@+id/question"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="How many time zones are there in Russia?"
+        android:text=""
         android:layout_marginTop="20dp"
         android:textSize="20sp"
         android:textColor="@color/white"
@@ -117,14 +117,14 @@
 
             <TextView
                 android:id="@+id/question_1"
-                android:layout_width="wrap_content"
+                android:layout_width="270dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 style="@style/question"
                 android:layout_marginLeft="20dp"
-                android:text="Question 1"/>
+                android:text=""/>
 
             <RadioButton
                 android:id="@+id/radio_button_1"
@@ -148,14 +148,14 @@
 
             <TextView
                 android:id="@+id/question_2"
-                android:layout_width="wrap_content"
+                android:layout_width="270dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 style="@style/question"
                 android:layout_marginLeft="20dp"
-                android:text="Question 1"/>
+                android:text=""/>
 
             <RadioButton
                 android:id="@+id/radio_button_2"
@@ -177,14 +177,14 @@
 
             <TextView
                 android:id="@+id/question_3"
-                android:layout_width="wrap_content"
+                android:layout_width="270dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 style="@style/question"
                 android:layout_marginLeft="20dp"
-                android:text="Question 1"/>
+                android:text=""/>
 
             <RadioButton
                 android:id="@+id/radio_button_3"
@@ -206,14 +206,14 @@
 
             <TextView
                 android:id="@+id/question_4"
-                android:layout_width="wrap_content"
+                android:layout_width="270dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 style="@style/question"
                 android:layout_marginLeft="20dp"
-                android:text="Question 1"/>
+                android:text=""/>
 
             <RadioButton
                 android:id="@+id/radio_button_4"
