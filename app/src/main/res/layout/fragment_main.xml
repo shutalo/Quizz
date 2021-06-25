@@ -43,7 +43,7 @@
     </androidx.constraintlayout.widget.Guideline>
 
     <TextView
-        android:id="@+id/play_TextView"
+        android:id="@+id/title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcome_back"
@@ -61,7 +61,7 @@
         android:layout_margin="15dp"
         app:layout_constraintLeft_toRightOf="@id/leftGuideline"
         app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/play_TextView" />
+        app:layout_constraintTop_toBottomOf="@id/title_tv" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/rules_button"
@@ -89,7 +89,7 @@
         app:layout_constraintTop_toBottomOf="@id/rules_button" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/login_button"
+        android:id="@+id/play_button"
         android:layout_width="0dp"
         android:layout_height="50dp"
         app:layout_constraintLeft_toRightOf="@id/leftGuideline"
@@ -103,4 +103,11 @@
         android:text="@string/fragment_main_play"
         style="@style/logRegButton"
         />
+
+    <ImageView
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/rocket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

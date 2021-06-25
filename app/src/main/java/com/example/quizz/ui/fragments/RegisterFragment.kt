@@ -14,7 +14,6 @@ class RegisterFragment() : Fragment() {
 
     private val viewModel by sharedViewModel<RegisterViewModel>()
     private var loginListener : (() -> Unit)? = null
-    private var registerListener : (() -> Unit)? = null
     private lateinit var binding: FragmentRegisterBinding
 
     fun setUpLoginButtonListener(listener: (() -> Unit)){

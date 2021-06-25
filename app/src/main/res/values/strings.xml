@@ -25,4 +25,19 @@
     <string name="fragment_main_rules">Rules</string>
     <string name="fragment_main_play">Play</string>
     <string name="fragment_leaderboard_title">Leaderboard</string>
+    <string name="fragment_profile_intro">Let people see your pretty face!</string>
+    <string name="fragment_profile_description">Change your password</string>
+    <string name="fragment_profile_change_password">Change my password!</string>
+    <string name="fragment_profile_delete_account">Delete your precious account.</string>
+    <string name="fragment_dialog_delete_account_title">Oh no!</string>
+    <string name="fragment_dialog_delete_account_description">Are you sure you want to <font fgcolor="#FFFF3B30">delete</font> your account?</string>
+    <string name="fragment_game_next">Next</string>
+    <string name="fragment_dialog_rules_title">Rules</string>
+    <string name="fragment_dialog_rule_1">Answers a question in 30 seconds!</string>
+    <string name="fragment_dialog_rule_2">Every correct answer brings you point!</string>
+    <string name="fragment_dialog_rule_3">One wrong answer and the game is over!</string>
+    <string name="fragment_game_over_title">Game over!</string>
+    <string name="fragment_game_over_description">Hooraay! Your final score is</string>
+    <string name="fragment_game_over_play_again">Play again</string>
+    <string name="fragment_game_over_leaderboard">Leaderboard</string>
 </resources>

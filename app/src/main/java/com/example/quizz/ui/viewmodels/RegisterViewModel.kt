@@ -8,6 +8,7 @@ import com.example.quizz.data.model.User
 import com.example.quizz.data.repository.Repository
 import com.example.quizz.ui.activities.WelcomeActivity
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -26,7 +27,6 @@ class RegisterViewModel(private val repository: Repository) : ViewModel() {
     var isSigningInSuccessful: LiveData<Boolean> = _isSigningInSuccessful
     private var _isUsernameChosen: MutableLiveData<Boolean> = MutableLiveData(false)
     var isUsernameChosen: LiveData<Boolean> = _isUsernameChosen
-
 
     fun register(email: String, password: String){
         viewModelScope.launch {

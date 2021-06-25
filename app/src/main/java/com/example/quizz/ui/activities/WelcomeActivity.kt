@@ -38,16 +38,16 @@ class WelcomeActivity :  AppCompatActivity() {
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
 
         registerFragment.setUpLoginButtonListener {
-            supportFragmentManager.beginTransaction().replace(R.id.fragment_container,loginFragment).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.welcome_activity_fragment_container,loginFragment).commit()
         }
         loginFragment.setUpRegisterButtonListener {
-            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, registerFragment).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.welcome_activity_fragment_container, registerFragment).commit()
         }
         loginFragment.setUpChangePasswordListener {
-            supportFragmentManager.beginTransaction().replace(R.id.fragment_container,changePasswordFragment).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.welcome_activity_fragment_container,changePasswordFragment).commit()
         }
         changePasswordFragment.setUpBackToLoginListener {
-            supportFragmentManager.beginTransaction().replace(R.id.fragment_container,loginFragment).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.welcome_activity_fragment_container,loginFragment).commit()
         }
 
         viewModel.isUsernameChosen.observe(this){
@@ -58,12 +58,12 @@ class WelcomeActivity :  AppCompatActivity() {
         viewModel.isPasswordChangeRequested.observe(this){
             if(it) {
                 Log.d(TAG,"password change requested")
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, loginFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.welcome_activity_fragment_container, loginFragment).commit()
             }
         }
         viewModel.isUserRegisteredSuccessfully.observe(this){
             if(it){
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container,chooseUsernameFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.welcome_activity_fragment_container,chooseUsernameFragment).commit()
             }
         }
         viewModel.isSigningInSuccessful.observe(this){
@@ -75,7 +75,7 @@ class WelcomeActivity :  AppCompatActivity() {
             if(it == true){
                 startMainActivity()
             } else if(it == false){
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, loginFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.welcome_activity_fragment_container, loginFragment).commit()
             }
         }
     }
@@ -83,7 +83,6 @@ class WelcomeActivity :  AppCompatActivity() {
     private fun startMainActivity(){
         CoroutineScope(Dispatchers.IO).launch {
             val intent: Intent = Intent(Quizz.context,MainActivity::class.java)
-            intent.putExtra("user",viewModel.getCurrentUserObject())
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK  or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
