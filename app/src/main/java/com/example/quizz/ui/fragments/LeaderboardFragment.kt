@@ -47,9 +47,21 @@ class LeaderboardFragment: Fragment() {
             (binding.recyclerView.adapter as LeaderboardRecyclerViewAdapter).refreshData(it,username)
         }
         viewModel.topThreePlayers.observe(viewLifecycleOwner){
-            it[0].photo?.let { it1 -> setUpImage(it1,binding.playerPosition1Iv) }
-            it[1].photo?.let { it2 -> setUpImage(it2,binding.playerPosition2Iv) }
-            it[2].photo?.let { it3 -> setUpImage(it3,binding.playerPosition3Iv) }
+            if(it[0].photo == null){
+                setUpImage(null,binding.playerPosition1Iv)
+            } else {
+                setUpImage(it[0].photo,binding.playerPosition1Iv)
+            }
+            if(it[1].photo == null){
+                setUpImage(null,binding.playerPosition2Iv)
+            } else {
+                setUpImage(it[1].photo,binding.playerPosition2Iv)
+            }
+            if(it[2].photo == null){
+                setUpImage(null,binding.playerPosition3Iv)
+            } else {
+                setUpImage(it[2].photo,binding.playerPosition3Iv)
+            }
             binding.playerHighScore1.text = it[0].highScore.toString()
             binding.playerHighScore2.text = it[1].highScore.toString()
             binding.playerHighScore3.text = it[2].highScore.toString()
@@ -82,12 +94,19 @@ class LeaderboardFragment: Fragment() {
         viewModel.getPlayersForRecyclerView()
     }
 
-    private fun setUpImage(imageUri: Uri,view: ImageView){
+    private fun setUpImage(imageUri: Uri?,view: ImageView){
         val theme = resources.newTheme()
-        Glide.with(binding.root)
-            .load(imageUri)
-            .placeholder(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,theme))
-            .circleCrop()
-            .into(view)
+        if(imageUri == null){
+            Glide.with(binding.root)
+                .load(R.drawable.profile_image)
+                .circleCrop()
+                .into(view)
+        } else {
+            Glide.with(binding.root)
+                .load(imageUri)
+                .placeholder(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,theme))
+                .circleCrop()
+                .into(view)
+        }
     }
 }

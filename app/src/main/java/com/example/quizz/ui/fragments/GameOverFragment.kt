@@ -14,6 +14,10 @@ import com.example.quizz.R
 import com.example.quizz.databinding.FragmentGameOverBinding
 import com.example.quizz.ui.activities.MainActivity
 import com.example.quizz.ui.viewmodels.GameViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class GameOverFragment: Fragment() {
@@ -32,11 +36,19 @@ class GameOverFragment: Fragment() {
             switchToLeaderboardScreen()
         }
         binding.scoreTv.text = viewModel.getScore().toString()
-        Glide.with(binding.root)
-            .load(viewModel.getPhoto())
-            .placeholder(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,resources.newTheme()))
-            .circleCrop()
-            .into(binding.profileImageIv)
+        if(viewModel.getPhoto().toString() != "null"){
+            Glide.with(binding.root)
+                .load(viewModel.getPhoto())
+                .placeholder(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,resources.newTheme()))
+                .circleCrop()
+                .into(binding.profileImageIv)
+        } else {
+            Glide.with(binding.root)
+                .load(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,resources.newTheme()))
+                .placeholder(ResourcesCompat.getDrawable(resources,R.drawable.profile_image,resources.newTheme()))
+                .circleCrop()
+                .into(binding.profileImageIv)
+        }
         return binding.root
     }
 
@@ -45,7 +57,7 @@ class GameOverFragment: Fragment() {
     }
 
     private fun replaceToGameFragment(){
-        parentFragmentManager.beginTransaction().replace(R.id.game_activity_fragment_container, GameFragment()).commit()
+        parentFragmentManager.beginTransaction().replace(R.id.game_activity_fragment_container, GameFragment.getInstance()).commit()
     }
 
     private fun switchToLeaderboardScreen(){

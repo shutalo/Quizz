@@ -16,6 +16,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import android.os.CountDownTimer
+import androidx.core.content.res.ResourcesCompat
+import kotlinx.coroutines.flow.collect
 import java.util.*
 
 class GameFragment : Fragment() {
@@ -36,51 +38,93 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.getQuestions()
-        }
+        Log.d(TAG,"created")
 
-        viewModel.countDownTick.observe(viewLifecycleOwner){
-            binding.timeProgressbar.progress = it
-        }
-        viewModel.secondsLeft.observe(viewLifecycleOwner){
-            binding.timeLeftTv.text = it.toString()
-            if(it == 0){
-                replaceToGameOverFragment()
-                viewModel.gameOver()
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+            if(viewModel.checkIfListOfQuestionsIsEmpty()){
+                viewModel.getQuestions()
             }
         }
+
+        viewModel.listOfQuestions.observe(viewLifecycleOwner){
+            if(viewModel.checkIfListOfQuestionsIsEmpty() && viewModel.newQuestionsFetched){
+                viewModel.updateQuestions(it)
+            }
+        }
+
+
         viewModel.questionAnswered.observe(viewLifecycleOwner){
             if(it == true){
-                viewModel.startTimer(false)
+                viewModel.toggleStart()
                 questionAnswered = true
                 when(radioButtonClicked){
-                    1 -> binding.radioButton1.setBackgroundColor(Quizz.context.resources.getColor(R.color.green,Quizz.context.resources.newTheme()))
-                    2 -> binding.radioButton2.setBackgroundColor(Quizz.context.resources.getColor(R.color.green,Quizz.context.resources.newTheme()))
-                    3 -> binding.radioButton3.setBackgroundColor(Quizz.context.resources.getColor(R.color.green,Quizz.context.resources.newTheme()))
-                    4 -> binding.radioButton4.setBackgroundColor(Quizz.context.resources.getColor(R.color.green,Quizz.context.resources.newTheme()))
+                    1 ->{
+                        binding.radioButton1.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton1.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_answered_correctly,resources.newTheme())
+                    }
+                    2 ->{
+                        binding.radioButton2.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton2.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_answered_correctly,resources.newTheme())
+                    }
+                    3 ->{
+                        binding.radioButton3.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton3.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_answered_correctly,resources.newTheme())
+                    }
+                    4 ->{
+                        binding.radioButton4.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton4.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_answered_correctly,resources.newTheme())
+                    }
                 }
             } else if(it == false){
-                viewModel.startTimer(false)
+                viewModel.toggleStart()
                 questionAnswered = false
                 when(radioButtonClicked){
-                    1 -> binding.radioButton1.setBackgroundColor(Quizz.context.resources.getColor(R.color.dark_red,Quizz.context.resources.newTheme()))
-                    2 -> binding.radioButton2.setBackgroundColor(Quizz.context.resources.getColor(R.color.dark_red,Quizz.context.resources.newTheme()))
-                    3 -> binding.radioButton3.setBackgroundColor(Quizz.context.resources.getColor(R.color.dark_red,Quizz.context.resources.newTheme()))
-                    4 -> binding.radioButton4.setBackgroundColor(Quizz.context.resources.getColor(R.color.dark_red,Quizz.context.resources.newTheme()))
+                    1 ->{
+                        binding.radioButton1.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton1.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_incorrect_answer,resources.newTheme())
+                    }
+                    2 ->{
+                        binding.radioButton2.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton2.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_incorrect_answer,resources.newTheme())
+                    }
+                    3 ->{
+                        binding.radioButton3.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton3.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_incorrect_answer,resources.newTheme())
+                    }
+                    4 ->{
+                        binding.radioButton4.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton4.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_incorrect_answer,resources.newTheme())
+                    }
                 }
                 when(correctAnswerPosition){
-                    1 -> binding.radioButton1.setBackgroundColor(Quizz.context.resources.getColor(R.color.green,Quizz.context.resources.newTheme()))
-                    2 -> binding.radioButton2.setBackgroundColor(Quizz.context.resources.getColor(R.color.green,Quizz.context.resources.newTheme()))
-                    3 -> binding.radioButton3.setBackgroundColor(Quizz.context.resources.getColor(R.color.green,Quizz.context.resources.newTheme()))
-                    4 -> binding.radioButton4.setBackgroundColor(Quizz.context.resources.getColor(R.color.green,Quizz.context.resources.newTheme()))
+                    1 ->{
+                        binding.radioButton1.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton1.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_correct_answer,resources.newTheme())
+                    }
+                    2 ->{
+                        binding.radioButton2.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton2.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_correct_answer,resources.newTheme())
+                    }
+                    3 ->{
+                        binding.radioButton3.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton3.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_correct_answer,resources.newTheme())
+                    }
+                    4 ->{
+                        binding.radioButton4.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+                        binding.radioButton4.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_correct_answer,resources.newTheme())
+                    }
                 }
             }
         }
         viewModel.questionsFetched.observe(viewLifecycleOwner){
-            CoroutineScope(Dispatchers.IO).launch {
-                viewModel.getNewQuestion()
+            CoroutineScope(Dispatchers.Main).launch {
+                if(it){
+                    viewModel.getNewQuestion()
+                }
             }
+
         }
         viewModel.questionNumber.observe(viewLifecycleOwner){
             if(it >= 1){
@@ -89,52 +133,62 @@ class GameFragment : Fragment() {
         }
         viewModel.question.observe(viewLifecycleOwner){
             if(it == null){
-                Log.d(TAG,"null")
+                Log.d("$TAG question observe","null")
             } else{
                 updateUI(it)
-                viewModel.startTimer(true)
+                viewModel.toggleStart()
             }
         }
+        viewModel.timerTick.observe(viewLifecycleOwner){
+            if(it != 0){
+                updateTimerUi(it)
 
+            } else if(it == 0 && questionAnswered == null){
+                updateTimerUi(it)
+                replaceToGameOverFragment()
+                viewModel.gameOver()
+            }
+        }
 
 
         binding.nextQuestion.setOnClickListener{
             if(questionAnswered == false){
                 replaceToGameOverFragment()
+                questionAnswered = null
                 viewModel.gameOver()
             } else if(questionAnswered == true) {
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.getNewQuestion()
-                    viewModel.startTimer(true)
+                    questionAnswered = null
                 }
             }
 
         }
         binding.radioButton1.setOnClickListener {
-            viewModel.questionAnswered(binding.question1.text.toString())
             radioButtonClicked = 1
+            viewModel.questionAnswered(binding.question1.text.toString())
             disableButtons()
         }
         binding.radioButton2.setOnClickListener {
-            viewModel.questionAnswered(binding.question2.text.toString())
             radioButtonClicked = 2
+            viewModel.questionAnswered(binding.question2.text.toString())
             disableButtons()
         }
         binding.radioButton3.setOnClickListener {
-            viewModel.questionAnswered(binding.question3.text.toString())
             radioButtonClicked = 3
+            viewModel.questionAnswered(binding.question3.text.toString())
             disableButtons()
         }
         binding.radioButton4.setOnClickListener {
-            viewModel.questionAnswered(binding.question4.text.toString())
             radioButtonClicked = 4
+            viewModel.questionAnswered(binding.question4.text.toString())
             disableButtons()
         }
 
     }
 
     private fun replaceToGameOverFragment() {
-        parentFragmentManager.beginTransaction().replace(R.id.game_activity_fragment_container, GameOverFragment()).commit()
+        parentFragmentManager.beginTransaction().replace(R.id.game_activity_fragment_container, GameOverFragment.getInstance()).commit()
     }
 
 
@@ -153,18 +207,29 @@ class GameFragment : Fragment() {
 
     private fun enableButtons(){
         binding.radioButton1.isClickable = true
-        binding.radioButton1.isChecked = false
         binding.radioButton2.isClickable = true
-        binding.radioButton2.isChecked = false
         binding.radioButton3.isClickable = true
-        binding.radioButton3.isChecked = false
         binding.radioButton4.isClickable = true
+        binding.radioButton1.buttonDrawable = ResourcesCompat.getDrawable(resources,R.color.background_color,resources.newTheme())
+        binding.radioButton1.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_regular_radio_button,resources.newTheme())
+        binding.radioButton2.buttonDrawable = null
+        binding.radioButton2.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_regular_radio_button,resources.newTheme())
+        binding.radioButton3.buttonDrawable = null
+        binding.radioButton3.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_regular_radio_button,resources.newTheme())
+        binding.radioButton4.buttonDrawable = null
+        binding.radioButton4.background = ResourcesCompat.getDrawable(resources,R.drawable.ic_regular_radio_button,resources.newTheme())
+    }
+
+    private fun resetButtons(){
+        binding.radioButton1.isChecked = false
+        binding.radioButton2.isChecked = false
+        binding.radioButton3.isChecked = false
         binding.radioButton4.isChecked = false
     }
 
     private fun updateUI(question: Question){
         binding.question.text = question.question
-        enableButtons()
+        resetButtons()
         correctAnswerPosition = (1..4).random()
         when(correctAnswerPosition){
             1 -> {
@@ -192,5 +257,13 @@ class GameFragment : Fragment() {
                 binding.question4.text = question.correctAnswer
             }
         }
+        enableButtons()
     }
+
+    private fun updateTimerUi(value: Int){
+        binding.timeLeftTv.text = value.toString()
+        binding.timeProgressbar.progress = value * 1000
+    }
+
+
 }
