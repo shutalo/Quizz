@@ -66,6 +66,7 @@ class GameViewModel(private val repository: Repository, private val questionGene
              if(repository.getHighScore() < finalScore){
                  repository.updateHighScore(finalScore)
              }
+             _questionNumber.postValue(0)
          }
     }
 
