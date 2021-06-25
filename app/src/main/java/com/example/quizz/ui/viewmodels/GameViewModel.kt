@@ -44,7 +44,7 @@ class GameViewModel(private val repository: Repository, private val questionGene
     var timerFlagForDisablingDoubleEntry = true
 
     fun toggleStart(){
-        timerIntent.toggleTime(10)
+        timerIntent.toggleTime(30)
         collectAndUpdateUI()
     }
 
