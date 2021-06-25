@@ -3,8 +3,10 @@ package com.example.quizz.networking
 import android.text.Html
 import android.util.Base64
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.quizz.Quizz
 import com.example.quizz.data.model.Question
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,28 +31,15 @@ class QuestionGenerator {
 
     private val questionsApi: QuestionsApi = retrofit.create(QuestionsApi::class.java)
 
-    suspend fun getQuestions()/* = flow<List<Question>>*/ {
+    fun getQuestions(){
         try{
             val response = questionsApi.getQuestions()
-//            response.results.forEach{ it ->
-//                it.category = Html.fromHtml(it.category).toString()
-//                it.correctAnswer = Html.fromHtml(it.correctAnswer).toString()
-//                it.difficulty = Html.fromHtml(it.difficulty).toString()
-//                it.question = Html.fromHtml(it.question).toString()
-//                it.type = Html.fromHtml(it.type).toString()
-//                val answers = mutableListOf<String>()
-//                it.incorrectAnswers.forEach{
-//                    answers.add(Html.fromHtml(it).toString())
-//                }
-//                for(i in 0..2){
-//                    it.incorrectAnswers = answers
-//                }
-//            }
             response.enqueue(object: Callback<com.example.quizz.networking.Response>{
 
                 override fun onResponse(call: Call<com.example.quizz.networking.Response>, response: Response<com.example.quizz.networking.Response>) {
                     if(response.code() != 200){
                         Log.d(TAG,"code is: " + response.code().toString())
+                        Toast.makeText(Quizz.context,"Could not fetch questions: code: ${response.code()}",Toast.LENGTH_SHORT).show()
                     } else {
                         CoroutineScope(Dispatchers.IO).launch{
                             val myResponse: com.example.quizz.networking.Response = response.body()!!
@@ -72,12 +61,7 @@ class QuestionGenerator {
                 override fun onFailure(call: Call<com.example.quizz.networking.Response>, t: Throwable) {
                     Log.d(TAG,t.message.toString())
                 }
-
             })
-
-
-
-//            emit(response.results)
         } catch (e: Exception){
             Log.d("$TAG exception",e.message.toString())
         }

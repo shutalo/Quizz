@@ -38,10 +38,6 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d(TAG,"created")
-
-
-
         CoroutineScope(Dispatchers.IO).launch {
             if(viewModel.checkIfListOfQuestionsIsEmpty()){
                 viewModel.getQuestions()
@@ -53,8 +49,6 @@ class GameFragment : Fragment() {
                 viewModel.updateQuestions(it)
             }
         }
-
-
         viewModel.questionAnswered.observe(viewLifecycleOwner){
             if(it == true){
                 viewModel.toggleStart()
@@ -124,7 +118,6 @@ class GameFragment : Fragment() {
                     viewModel.getNewQuestion()
                 }
             }
-
         }
         viewModel.questionNumber.observe(viewLifecycleOwner){
             if(it >= 1){
@@ -139,27 +132,28 @@ class GameFragment : Fragment() {
                 viewModel.toggleStart()
             }
         }
-        viewModel.timerTick.observe(viewLifecycleOwner){
-            if(it != 0){
-                updateTimerUi(it)
 
-            } else if(it == 0 && questionAnswered == null){
+        viewModel.timerTick.observe(viewLifecycleOwner){
+            if(it != 0 && it != null){
                 updateTimerUi(it)
-                replaceToGameOverFragment()
+            } else if(it == 0 && questionAnswered == null && viewModel.timerFlagForDisablingDoubleEntry){
+                updateTimerUi(it)
                 viewModel.gameOver()
+                replaceToGameOverFragment()
             }
         }
 
 
+
         binding.nextQuestion.setOnClickListener{
             if(questionAnswered == false){
-                replaceToGameOverFragment()
                 questionAnswered = null
                 viewModel.gameOver()
+                replaceToGameOverFragment()
             } else if(questionAnswered == true) {
                 CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.getNewQuestion()
                     questionAnswered = null
+                    viewModel.getNewQuestion()
                 }
             }
 
@@ -190,7 +184,6 @@ class GameFragment : Fragment() {
     private fun replaceToGameOverFragment() {
         parentFragmentManager.beginTransaction().replace(R.id.game_activity_fragment_container, GameOverFragment.getInstance()).commit()
     }
-
 
     companion object{
         fun getInstance(): GameFragment{
@@ -265,5 +258,7 @@ class GameFragment : Fragment() {
         binding.timeProgressbar.progress = value * 1000
     }
 
-
+    override fun onResume() {
+        super.onResume()
+    }
 }

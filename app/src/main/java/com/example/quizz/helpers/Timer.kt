@@ -17,7 +17,7 @@ class Timer(private val timerScope: CoroutineScope) {
         job = if (job == null) {
             timerScope.launch {
                 initTimer(totalSeconds)
-                    .onCompletion { _timerStateFlow.emit(TimerState(0)) }
+                    .onCompletion { _timerStateFlow.emit(TimerState(null)) }
                     .collect { _timerStateFlow.emit(it) }
             }
         } else {

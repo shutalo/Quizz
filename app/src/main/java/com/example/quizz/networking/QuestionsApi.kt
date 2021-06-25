@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface QuestionsApi {
 
-    @GET("api.php?amount=10&type=multiple")
+    @GET("api.php?amount=50&type=multiple")
     fun getQuestions(): Call<Response>
 }

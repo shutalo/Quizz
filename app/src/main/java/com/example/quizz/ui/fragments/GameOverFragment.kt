@@ -27,8 +27,10 @@ class GameOverFragment: Fragment() {
     private lateinit var binding: FragmentGameOverBinding
     private val viewModel by sharedViewModel<GameViewModel>()
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentGameOverBinding.inflate(layoutInflater)
+        viewModel.timerFlagForDisablingDoubleEntry = false
         binding.playAgainButton.setOnClickListener{
             replaceToGameFragment()
         }
@@ -50,10 +52,6 @@ class GameOverFragment: Fragment() {
                 .into(binding.profileImageIv)
         }
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun replaceToGameFragment(){

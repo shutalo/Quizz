@@ -33,23 +33,30 @@ class GameViewModel(private val repository: Repository, private val questionGene
     private var currentQuestion: Question? = null
     private var score: Int = 0
     private var finalScore: Int = 0
-    private var _timerTick: MutableLiveData<Int> = MutableLiveData()
-    var timerTick: LiveData<Int> = _timerTick
+    private var _timerTick: MutableLiveData<Int?> = MutableLiveData()
+    var timerTick: LiveData<Int?> = _timerTick
     private val timerIntent = Timer(viewModelScope)
     private val timerStateFlow: StateFlow<TimerState> = timerIntent.timerStateFlow
     var listOfQuestions: LiveData<List<Question>> = questionGenerator.listOfQuestions
     var newQuestionsFetched: Boolean = true
 
 
+    var timerFlagForDisablingDoubleEntry = true
+
     fun toggleStart(){
-        timerIntent.toggleTime(30)
+        timerIntent.toggleTime(10)
         collectAndUpdateUI()
     }
 
     private fun collectAndUpdateUI(){
         viewModelScope.launch {
             timerStateFlow.collect {
-                _timerTick.postValue(it.secondsRemaining)
+                if(it.secondsRemaining != null){
+                    _timerTick.postValue(it.secondsRemaining)
+                } else if(timerFlagForDisablingDoubleEntry || timerTick.value != 0) {
+                    _timerTick.postValue(0)
+                    timerFlagForDisablingDoubleEntry = true
+                }
             }
         }
     }
@@ -76,32 +83,12 @@ class GameViewModel(private val repository: Repository, private val questionGene
         }
     }
 
-     suspend fun getQuestions(){
+     fun getQuestions(){
          viewModelScope.launch {
              if(questions.isEmpty()){
                  questionGenerator.getQuestions()
                  newQuestionsFetched = true
              }
-
-                 /*.collect(){
-                     val newQuestions = mutableListOf<Question>()
-                     it.forEach { q ->
-                         val answers = mutableListOf<String>()
-                         q.incorrectAnswers.forEach{ ia ->
-                             answers.add(Html.fromHtml(ia).toString())
-                         }
-                         val question = Question(Html.fromHtml(q.question).toString(),Html.fromHtml(q.correctAnswer).toString(),answers,Html.fromHtml(q.difficulty).toString(),Html.fromHtml(q.type).toString(),Html.fromHtml(q.category).toString())
-                         newQuestions.add(question)
-                     }
-                     questions = mutableListOf()
-                     questions.addAll(newQuestions)
-                     if(firstTimeFetchedQuestions){
-                         firstTimeFetchedQuestions = false
-                         _questionsFetched.postValue(true)
-                     }
-                     Log.d(TAG + "QUESTIONS",questions.toString())
-                 }*/
-
              Log.d(TAG + "QUESTIONS",questions.toString())
          }
     }
@@ -111,11 +98,10 @@ class GameViewModel(private val repository: Repository, private val questionGene
            questions = mutableListOf()
            questions.addAll(listOfQuestions)
            _questionsFetched.postValue(true)
-//           getNewQuestion()
        }
     }
 
-    suspend fun getNewQuestion(){
+    fun getNewQuestion(){
         if(questions.isEmpty()){
             getQuestions()
             newQuestionsFetched = true
@@ -140,12 +126,5 @@ class GameViewModel(private val repository: Repository, private val questionGene
         return questions.isEmpty()
     }
 
-    fun getNextQuestion(): Question{
-        return questions.last()
-    }
-
-    fun getCurrentQuestion() :Question{
-        return currentQuestion!!
-    }
 }
 
