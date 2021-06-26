@@ -3,6 +3,7 @@ package com.example.quizz.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.quizz.Quizz
 import com.example.quizz.R
@@ -16,8 +17,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.AppSettingsDialog
+import pub.devrel.easypermissions.EasyPermissions
+import java.util.ArrayList
+import java.util.jar.Manifest
 
-class WelcomeActivity :  AppCompatActivity() {
+class WelcomeActivity :  AppCompatActivity(), EasyPermissions.PermissionCallbacks{
 
     private val TAG = "WelcomeActivity"
     private val viewModel by viewModel<RegisterViewModel>()
@@ -34,6 +40,9 @@ class WelcomeActivity :  AppCompatActivity() {
         this.supportActionBar?.hide()
 
         Log.d(TAG,"Started")
+        //check for permissions
+        askForPermissions()
+
 
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
 
@@ -91,5 +100,98 @@ class WelcomeActivity :  AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         viewModel.checkIfUserIsSignedIn()
+    }
+
+    //@AfterPermissionGranted(Companion.REQUEST_CODE_PERMISSIONS)
+    private fun askForPermissions(){
+
+        if(EasyPermissions.hasPermissions(this, android.Manifest.permission.CAMERA,android.Manifest.permission.INTERNET,android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            Log.d(TAG,"permissions already granted!",)
+            Toast.makeText(this,"permission granted already!",Toast.LENGTH_SHORT).show()
+        } else {
+            EasyPermissions.requestPermissions(this, "We need permissions for managing your account and progress", Companion.REQUEST_CODE_PERMISSIONS, android.Manifest.permission.CAMERA,android.Manifest.permission.INTERNET,android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+
+//        if(EasyPermissions.hasPermissions(this, android.Manifest.permission.CAMERA)){
+//            Log.d(TAG,"Camera permissions already granted!",)
+//            Toast.makeText(this,"Camera permission granted already!",Toast.LENGTH_SHORT).show()
+//        } else {
+//            EasyPermissions.requestPermissions(this, "We need permissions for managing your account and progress", Companion.REQUEST_CODE_PERMISSIONS, android.Manifest.permission.CAMERA)
+//        }
+//
+//        if(EasyPermissions.hasPermissions(this,
+//                android.Manifest.permission.READ_EXTERNAL_STORAGE)){
+//            Log.d(TAG,"Read external storage permission already granted!",)
+//            Toast.makeText(this,"Read external storage permissions granted already!",Toast.LENGTH_SHORT).show()
+//        } else {
+//            EasyPermissions.requestPermissions(this,
+//                "We need permissions for managing your account and progress",
+//                Companion.REQUEST_CODE_PERMISSIONS,
+//                android.Manifest.permission.READ_EXTERNAL_STORAGE)
+//        }
+//
+//        if(EasyPermissions.hasPermissions(this,
+//                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+//            Log.d(TAG,"Write external storage permission already granted!",)
+//            Toast.makeText(this,"Write external storage permissions granted already!",Toast.LENGTH_SHORT).show()
+//        } else {
+//            EasyPermissions.requestPermissions(this,
+//                "We need permissions for managing your account and progress",
+//                Companion.REQUEST_CODE_PERMISSIONS,
+//                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//        }
+//
+//        if(EasyPermissions.hasPermissions(this,
+//                android.Manifest.permission.INTERNET)){
+//            Log.d(TAG,"Internet permission already granted!",)
+//            Toast.makeText(this,"Internet permissions granted already!",Toast.LENGTH_SHORT).show()
+//        } else {
+//            EasyPermissions.requestPermissions(this,
+//                "We need permissions for managing your account and progress",
+//                Companion.REQUEST_CODE_PERMISSIONS,
+//                android.Manifest.permission.INTERNET)
+//        }
+//
+//        if(EasyPermissions.hasPermissions(this,
+//                android.Manifest.permission.ACCESS_NETWORK_STATE)){
+//            Log.d(TAG,"Access network state permission already granted!",)
+//            Toast.makeText(this,"Access network state permissions granted already!",Toast.LENGTH_SHORT).show()
+//        } else {
+//            EasyPermissions.requestPermissions(this,
+//                "We need permissions for managing your account and progress",
+//                Companion.REQUEST_CODE_PERMISSIONS,
+//                android.Manifest.permission.ACCESS_NETWORK_STATE)
+//        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults)
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        Log.d(TAG,"permissions granted!",)
+        Toast.makeText(this,"permissions granted!",Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        if(EasyPermissions.somePermissionPermanentlyDenied(this,perms)){
+            Log.d(TAG,"permissions denied!",)
+            AppSettingsDialog.Builder(this).build().show()
+            Toast.makeText(this,"permissions denied!",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    companion object {
+        private const val REQUEST_CODE_PERMISSIONS = 1
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE){
+            askForPermissions()
+        }
     }
 }
