@@ -5,109 +5,126 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background_color">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/header_layout"
-    android:layout_width="match_parent"
-    android:layout_height="120dp"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:background="@color/header_color">
-
-    <ImageView
-        android:id="@+id/header_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/header"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/leftGuideline"
-        android:layout_width="0dp"
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintGuide_begin="24dp"
         android:orientation="vertical">
-    </androidx.constraintlayout.widget.Guideline>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/rightGuideline"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        app:layout_constraintGuide_end="24dp"
-        android:orientation="vertical">
-    </androidx.constraintlayout.widget.Guideline>
 
-    <TextView
-        android:id="@+id/title_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/welcome_back"
-        style="@style/TextAppearance.Title"
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="15dp"
-        app:layout_constraintLeft_toLeftOf="@id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@id/header_layout"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/intro_TextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/welcome"
-        android:layout_margin="15dp"
-        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
-        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/title_tv" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/rules_button"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@id/intro_TextView"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/switch_to_log_reg_button"
-        android:text="@string/fragment_main_rules"
-        style="@style/switchLogRegButton"
-        />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/header_layout"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/header_color">
 
-    <TextView
-        android:id="@+id/ready_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_main_ready"
-        android:layout_marginTop="80dp"
-        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
-        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/rules_button" />
+                <ImageView
+                    android:id="@+id/header_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/header"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/play_button"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
-        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/ready_tv"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/log_reg_button"
-        android:text="@string/fragment_main_play"
-        style="@style/logRegButton"
-        />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@drawable/rocket"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/leftGuideline"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintGuide_begin="24dp"
+                android:orientation="vertical">
+            </androidx.constraintlayout.widget.Guideline>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/rightGuideline"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintGuide_end="24dp"
+                android:orientation="vertical">
+            </androidx.constraintlayout.widget.Guideline>
+
+            <TextView
+                android:id="@+id/title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_back"
+                style="@style/TextAppearance.Title"
+                android:layout_marginTop="100dp"
+                android:layout_marginLeft="15dp"
+                app:layout_constraintLeft_toLeftOf="@id/leftGuideline"
+                app:layout_constraintTop_toBottomOf="@id/header_layout"/>
+
+            <TextView
+                android:id="@+id/intro_TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_main_intro"
+                android:layout_margin="15dp"
+                app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+                app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+                app:layout_constraintTop_toBottomOf="@id/title_tv" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/rules_button"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+                app:layout_constraintTop_toBottomOf="@id/intro_TextView"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/switch_to_log_reg_button"
+                android:text="@string/fragment_main_rules"
+                style="@style/switchLogRegButton"
+                />
+
+            <TextView
+                android:id="@+id/ready_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_main_ready"
+                android:layout_marginTop="80dp"
+                app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+                app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+                app:layout_constraintTop_toBottomOf="@id/rules_button" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/play_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+                app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+                app:layout_constraintTop_toBottomOf="@id/ready_tv"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/log_reg_button"
+                android:text="@string/fragment_main_play"
+                style="@style/logRegButton"
+                />
+
+            <ImageView
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/rocket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

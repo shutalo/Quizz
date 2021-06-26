@@ -5,120 +5,135 @@
     android:layout_height="match_parent"
     android:background="@color/background_color">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/header_layout"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/header_color">
-
-        <ImageView
-            android:id="@+id/header_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/header"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/leftGuideline"
-        android:layout_width="0dp"
         android:layout_height="match_parent"
-        app:layout_constraintGuide_begin="24dp"
         android:orientation="vertical">
-    </androidx.constraintlayout.widget.Guideline>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/rightGuideline"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        app:layout_constraintGuide_end="24dp"
-        android:orientation="vertical">
-    </androidx.constraintlayout.widget.Guideline>
-
-    <TextView
-        android:id="@+id/who_are_you_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/who_are_you"
-        style="@style/TextAppearance.Title"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="10dp"
-        app:layout_constraintLeft_toLeftOf="@id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@id/header_layout"/>
-
-    <TextView
-        android:id="@+id/intro_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/pick_username"
-        android:layout_margin="10dp"
-        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
-        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/who_are_you_tv" />
-
-    <TextView
-        android:id="@+id/login_tv"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="@string/choose_username"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="10dp"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@id/intro_tv" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/username_input_layout"
-        style="@style/myOutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
-        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/login_tv"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        app:startIconDrawable ="@drawable/ic_baseline_person_24"
-        app:startIconTint="@color/white"
-        android:hint="Username"
-        android:textColorHint ="@color/white"
-        app:hintTextColor="@color/white"
-        app:boxStrokeWidth="0dp"
-        app:boxBackgroundColor="@color/header_color"
-        android:enabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/username"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/white"
-            />
+            android:layout_height="match_parent">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/header_layout"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/header_color">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/choose_username_button"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        app:layout_constraintLeft_toRightOf="@id/leftGuideline"
-        app:layout_constraintRight_toLeftOf="@id/rightGuideline"
-        app:layout_constraintTop_toBottomOf="@id/username_input_layout"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/log_reg_button"
-        android:text="@string/login"
-        style="@style/logRegButton"
-        />
+                <ImageView
+                    android:id="@+id/header_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/header"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/leftGuideline"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintGuide_begin="24dp"
+                android:orientation="vertical">
+            </androidx.constraintlayout.widget.Guideline>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/rightGuideline"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintGuide_end="24dp"
+                android:orientation="vertical">
+            </androidx.constraintlayout.widget.Guideline>
+
+            <TextView
+                android:id="@+id/who_are_you_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/who_are_you"
+                style="@style/TextAppearance.Title"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintLeft_toLeftOf="@id/leftGuideline"
+                app:layout_constraintTop_toBottomOf="@id/header_layout"/>
+
+            <TextView
+                android:id="@+id/intro_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/pick_username"
+                android:layout_margin="10dp"
+                app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+                app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+                app:layout_constraintTop_toBottomOf="@id/who_are_you_tv" />
+
+            <TextView
+                android:id="@+id/login_tv"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="@string/choose_username"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+                app:layout_constraintTop_toBottomOf="@id/intro_tv" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/username_input_layout"
+                style="@style/myOutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+                app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+                app:layout_constraintTop_toBottomOf="@id/login_tv"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:startIconDrawable ="@drawable/ic_baseline_person_24"
+                app:startIconTint="@color/white"
+                android:hint="Username"
+                android:textColorHint ="@color/white"
+                app:hintTextColor="@color/white"
+                app:boxStrokeWidth="0dp"
+                app:boxBackgroundColor="@color/header_color"
+                android:enabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/choose_username_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                app:layout_constraintLeft_toRightOf="@id/leftGuideline"
+                app:layout_constraintRight_toLeftOf="@id/rightGuideline"
+                app:layout_constraintTop_toBottomOf="@id/username_input_layout"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/log_reg_button"
+                android:text="@string/login"
+                style="@style/logRegButton"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
