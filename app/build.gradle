@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.quizz"
-        minSdkVersion 26
+        minSdkVersion 27
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -97,4 +97,9 @@ dependencies {
     implementation "androidx.room:room-runtime:2.3.0"
     kapt "androidx.room:room-compiler:2.3.0"
     implementation "androidx.room:room-ktx:2.3.0"
+
+    //easy permission
+    implementation 'pub.devrel:easypermissions:3.0.0'
+    implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
+
 }
