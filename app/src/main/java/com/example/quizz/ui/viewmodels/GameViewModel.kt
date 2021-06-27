@@ -157,6 +157,7 @@ class GameViewModel(private val repository: Repository, private val questionGene
     override fun onCleared() {
         super.onCleared()
         repository.saveQuestionsToRoomDatabase(questions)
+        //test dev_token_api push to remote origin
     }
 }
 
