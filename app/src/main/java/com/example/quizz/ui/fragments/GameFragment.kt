@@ -155,9 +155,8 @@ class GameFragment : Fragment() {
         binding.nextQuestion.setOnClickListener{
             if(questionAnswered == false){
                 questionAnswered = null
-//                viewModel.gameOver()
-//                replaceToGameOverFragment()
-                viewModel.getNewQuestion()
+                viewModel.gameOver()
+                replaceToGameOverFragment()
             } else if(questionAnswered == true) {
                 CoroutineScope(Dispatchers.IO).launch {
                     questionAnswered = null

@@ -69,7 +69,6 @@ class GameViewModel(private val repository: Repository, private val questionGene
                  repository.updateHighScore(finalScore)
              }
              _questionNumber.postValue(0)
-             questionGenerator.clearQuestionList()
          }
     }
 
@@ -99,18 +98,16 @@ class GameViewModel(private val repository: Repository, private val questionGene
 
     fun updateQuestions(listOfQuestions: List<Question>){
        viewModelScope.launch {
-//           val questionsFromRoom = repository.getQuestionsFromRoomDatabase()
-//           repository.clearQuestionsDatabase()
+           val questionsFromRoom = repository.getQuestionsFromRoomDatabase()
+           repository.clearQuestionsDatabase()
            if(questions.isEmpty()){
-//               if(questionsFromRoom.isEmpty()){
-//                   questions = mutableListOf()
-//                   questions.addAll(listOfQuestions)
-//               } else {
-//                   questions = mutableListOf()
-//                   questions.addAll(questionsFromRoom)
-//               }
-               questions = mutableListOf()
-               questions.addAll(listOfQuestions)
+               if(questionsFromRoom.isEmpty()){
+                   questions = mutableListOf()
+                   questions.addAll(listOfQuestions)
+               } else {
+                   questions = mutableListOf()
+                   questions.addAll(questionsFromRoom)
+               }
            }
            _questionsFetched.postValue(true)
        }
@@ -159,7 +156,7 @@ class GameViewModel(private val repository: Repository, private val questionGene
 
     override fun onCleared() {
         super.onCleared()
-//        repository.saveQuestionsToRoomDatabase(questions)
+        repository.saveQuestionsToRoomDatabase(questions)
     }
 }
 

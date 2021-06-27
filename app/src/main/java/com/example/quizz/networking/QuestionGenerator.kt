@@ -159,8 +159,4 @@ class QuestionGenerator {
             Log.d(TAG,e.message.toString())
         }
     }
-
-    fun clearQuestionList(){
-        _listOfQuestions.postValue(null)
-    }
 }

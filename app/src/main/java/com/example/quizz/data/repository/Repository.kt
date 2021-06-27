@@ -22,7 +22,7 @@ import kotlinx.coroutines.tasks.await
 import org.koin.core.component.getScopeId
 import kotlin.collections.HashMap
 
-class Repository(private val dao: Dao,private val tokenDao: TokenDao) {
+class Repository(private val dao: Dao,private val tokenDao: TokenDao, private val questionsDao: QuestionsDao) {
 
     private val TAG = "Repository"
 
@@ -233,18 +233,18 @@ class Repository(private val dao: Dao,private val tokenDao: TokenDao) {
     fun saveTokenToRoomDatabase(token: Token){
         tokenDao.insert(token)
     }
-//
-//    fun saveQuestionsToRoomDatabase(questions: List<Question>){
-//        questions.forEach{
-//            questionsDao.insert(it)
-//        }
-//    }
-//
-//    fun getQuestionsFromRoomDatabase(): List<Question>{
-//        return questionsDao.getQuestions()
-//    }
-//
-//    fun clearQuestionsDatabase(){
-//        questionsDao.deleteAll()
-//    }
+
+    fun saveQuestionsToRoomDatabase(questions: List<Question>){
+        questions.forEach{
+            questionsDao.insert(it)
+        }
+    }
+
+    fun getQuestionsFromRoomDatabase(): List<Question>{
+        return questionsDao.getQuestions()
+    }
+
+    fun clearQuestionsDatabase(){
+        questionsDao.deleteAll()
+    }
 }
