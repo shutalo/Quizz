@@ -38,9 +38,16 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val token = viewModel.getTokenFromRoomDatabase()
+
         CoroutineScope(Dispatchers.IO).launch {
             if(viewModel.checkIfListOfQuestionsIsEmpty()){
-                viewModel.getQuestions()
+                if(token != null){
+                    viewModel.getQuestions(token)
+                } else {
+                    Log.d(TAG,"token is null")
+                    viewModel.getTokenFromApi()
+                }
             }
         }
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizz.data.model.Question
+import com.example.quizz.data.model.Token
 import com.example.quizz.data.repository.Repository
 import com.example.quizz.helpers.Timer
 import com.example.quizz.helpers.TimerState
@@ -39,6 +40,7 @@ class GameViewModel(private val repository: Repository, private val questionGene
     private val timerStateFlow: StateFlow<TimerState> = timerIntent.timerStateFlow
     var listOfQuestions: LiveData<List<Question>> = questionGenerator.listOfQuestions
     var newQuestionsFetched: Boolean = true
+    var token: LiveData<Token> = questionGenerator.token
 
 
     var timerFlagForDisablingDoubleEntry = true
@@ -84,10 +86,10 @@ class GameViewModel(private val repository: Repository, private val questionGene
         }
     }
 
-     fun getQuestions(){
+     fun getQuestions(token: Token){
          viewModelScope.launch {
              if(questions.isEmpty()){
-                 questionGenerator.getQuestions()
+                 questionGenerator.getQuestionsWithToken(token.token)
                  newQuestionsFetched = true
              }
              Log.d(TAG + "QUESTIONS",questions.toString())
@@ -96,15 +98,24 @@ class GameViewModel(private val repository: Repository, private val questionGene
 
     fun updateQuestions(listOfQuestions: List<Question>){
        viewModelScope.launch {
-           questions = mutableListOf()
-           questions.addAll(listOfQuestions)
+           val questionsFromRoom = repository.getQuestionsFromRoomDatabase()
+           repository.clearQuestionsDatabase()
+           if(questions.isEmpty()){
+               if(questionsFromRoom.isEmpty()){
+                   questions = mutableListOf()
+                   questions.addAll(listOfQuestions)
+               } else {
+                   questions = mutableListOf()
+                   questions.addAll(questionsFromRoom)
+               }
+           }
            _questionsFetched.postValue(true)
        }
     }
 
     fun getNewQuestion(){
         if(questions.isEmpty()){
-            getQuestions()
+            getQuestions(getTokenFromRoomDatabase()!!)
             newQuestionsFetched = true
         } else{
             newQuestionsFetched = false
@@ -127,5 +138,25 @@ class GameViewModel(private val repository: Repository, private val questionGene
         return questions.isEmpty()
     }
 
+    fun getTokenFromRoomDatabase(): Token?{
+        return repository.getTokenFromRoomDatabase()
+    }
+
+    fun getTokenFromApi(){
+        questionGenerator.getToken()
+    }
+
+    fun checkIfTokenIsValid(token: Token){
+        questionGenerator.checkIfTokenIsValid(token)
+    }
+
+    fun saveTokenToRoomDatabase(token: Token){
+        repository.saveTokenToRoomDatabase(token)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        repository.saveQuestionsToRoomDatabase(questions)
+    }
 }
 
