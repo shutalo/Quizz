@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface QuestionsApi {
 
-    @GET("api.php?amount=10&type=multiple")
+    @GET("api.php?amount=50&type=multiple")
     fun getQuestions(): Call<Response>
 
     @GET("api_token.php?command=request")
