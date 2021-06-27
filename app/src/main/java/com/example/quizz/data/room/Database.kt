@@ -8,7 +8,7 @@ import com.example.quizz.data.model.Token
 import com.example.quizz.data.model.User
 import com.example.quizz.helpers.Converters
 
-@Database(entities = [User::class, Token::class], version = 2)
+@Database(entities = [User::class, Token::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class Database: RoomDatabase() {
     abstract fun dao(): Dao

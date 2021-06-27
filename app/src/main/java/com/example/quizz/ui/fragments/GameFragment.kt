@@ -52,7 +52,7 @@ class GameFragment : Fragment() {
         }
 
         viewModel.listOfQuestions.observe(viewLifecycleOwner){
-            if(viewModel.checkIfListOfQuestionsIsEmpty() && viewModel.newQuestionsFetched && it != null){
+            if(viewModel.checkIfListOfQuestionsIsEmpty() && viewModel.newQuestionsFetched){
                 viewModel.updateQuestions(it)
             }
         }
@@ -155,8 +155,9 @@ class GameFragment : Fragment() {
         binding.nextQuestion.setOnClickListener{
             if(questionAnswered == false){
                 questionAnswered = null
-                viewModel.gameOver()
-                replaceToGameOverFragment()
+//                viewModel.gameOver()
+//                replaceToGameOverFragment()
+                viewModel.getNewQuestion()
             } else if(questionAnswered == true) {
                 CoroutineScope(Dispatchers.IO).launch {
                     questionAnswered = null
