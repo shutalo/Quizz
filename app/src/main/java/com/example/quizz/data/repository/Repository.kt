@@ -170,9 +170,9 @@ class Repository(private val dao: Dao,private val tokenDao: TokenDao, private va
     suspend fun deleteAccount(): Boolean{
         try {
             if(checkIfImageExistsInFirebaseStorage(getCurrentUserObject().username)){
-                delete(getCurrentUserObject())
                 storage.reference.child("images/${getCurrentUserObject().username}/${getCurrentUserObject().username}.jpg").delete().await()
             }
+            delete(getCurrentUserObject())
             database.collection("users").document(getCurrentUser().uid).delete().await()
         } catch (e: Exception){
             Log.d(TAG + "delete acc",e.message.toString())
