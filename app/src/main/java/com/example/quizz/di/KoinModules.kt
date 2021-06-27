@@ -10,11 +10,11 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModules = module {
-    single<Repository> { Repository(get(),get()) }
+    single<Repository> { Repository(get(),get(),get()) }
     single<Database> { DatabaseBuilder.getInstance() }
     single<Dao> { get<Database>().dao() }
     single<TokenDao> { get<Database>().tokenDao() }
-    //single<QuestionsDao> { get<Database>().questionsDao() }
+    single<QuestionsDao> { get<Database>().questionsDao() }
     single<QuestionGenerator> { QuestionGenerator() }
 }
 

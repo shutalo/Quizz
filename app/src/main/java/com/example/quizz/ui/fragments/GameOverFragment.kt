@@ -62,6 +62,7 @@ class GameOverFragment: Fragment() {
         val intent = Intent(requireContext(), MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK  or Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtra("leaderboard",true)
+        viewModel.saveQuestionsToRoomDatabase()
         startActivity(intent)
     }
 

@@ -99,7 +99,6 @@ class GameViewModel(private val repository: Repository, private val questionGene
     fun updateQuestions(listOfQuestions: List<Question>){
        viewModelScope.launch {
            val questionsFromRoom = repository.getQuestionsFromRoomDatabase()
-           repository.clearQuestionsDatabase()
            if(questions.isEmpty()){
                if(questionsFromRoom.isEmpty()){
                    questions = mutableListOf()
@@ -107,6 +106,7 @@ class GameViewModel(private val repository: Repository, private val questionGene
                } else {
                    questions = mutableListOf()
                    questions.addAll(questionsFromRoom)
+                   repository.clearQuestionsDatabase()
                }
            }
            _questionsFetched.postValue(true)
@@ -154,9 +154,12 @@ class GameViewModel(private val repository: Repository, private val questionGene
         repository.saveTokenToRoomDatabase(token)
     }
 
+    fun saveQuestionsToRoomDatabase(){
+        repository.saveQuestionsToRoomDatabase(questions)
+    }
+
     override fun onCleared() {
         super.onCleared()
-        repository.saveQuestionsToRoomDatabase(questions)
         //test dev_token_api push to remote origin
     }
 }
