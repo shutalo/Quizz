@@ -6,8 +6,12 @@ import android.util.Log
 import android.widget.Toast
 import com.example.quizz.Quizz
 import com.example.quizz.R
+import com.example.quizz.data.model.Question
+import com.example.quizz.data.model.Token
 import com.example.quizz.data.model.User
 import com.example.quizz.data.room.Dao
+import com.example.quizz.data.room.QuestionsDao
+import com.example.quizz.data.room.TokenDao
 import com.example.quizz.helpers.ImageParser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -18,7 +22,7 @@ import kotlinx.coroutines.tasks.await
 import org.koin.core.component.getScopeId
 import kotlin.collections.HashMap
 
-class Repository(private val dao: Dao) {
+class Repository(private val dao: Dao,private val tokenDao: TokenDao) {
 
     private val TAG = "Repository"
 
@@ -221,4 +225,26 @@ class Repository(private val dao: Dao) {
         database.collection("users").document(getCurrentUser().uid).update("highScore",score).await()
         dao.insert(getCurrentUserObject())
     }
+
+    fun getTokenFromRoomDatabase(): Token?{
+        return tokenDao.getToken()
+    }
+
+    fun saveTokenToRoomDatabase(token: Token){
+        tokenDao.insert(token)
+    }
+//
+//    fun saveQuestionsToRoomDatabase(questions: List<Question>){
+//        questions.forEach{
+//            questionsDao.insert(it)
+//        }
+//    }
+//
+//    fun getQuestionsFromRoomDatabase(): List<Question>{
+//        return questionsDao.getQuestions()
+//    }
+//
+//    fun clearQuestionsDatabase(){
+//        questionsDao.deleteAll()
+//    }
 }

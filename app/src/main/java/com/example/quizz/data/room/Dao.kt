@@ -20,6 +20,7 @@ interface Dao {
     @Delete
     fun deleteUser(user: User)
 
+
 //    @Query("UPDATE user SET photo=:photo WHERE username=:username")
 //    fun updatePhoto(photo: Uri,username: String)
 }
