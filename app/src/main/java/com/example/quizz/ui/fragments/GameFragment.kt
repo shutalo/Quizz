@@ -141,9 +141,11 @@ class GameFragment : Fragment() {
         }
 
         viewModel.timerTick.observe(viewLifecycleOwner){
-            if(it != 0 && it != null){
-                updateTimerUi(it)
+            if(it != 0 ){
+                updateTimerUi(it!!)
+                questionAnswered = null
             } else if(it == 0 && questionAnswered == null && viewModel.timerFlagForDisablingDoubleEntry){
+                viewModel.timerFlagForDisablingDoubleEntry = false
                 updateTimerUi(it)
                 viewModel.gameOver()
                 replaceToGameOverFragment()
