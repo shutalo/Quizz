@@ -15,10 +15,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.quizz.R
+import com.example.quizz.data.model.Token
 import com.example.quizz.data.model.User
 import com.example.quizz.databinding.ActivityMainBinding
 import com.example.quizz.ui.adapters.MainScreenPagerAdapter
 import com.example.quizz.ui.fragments.MainFragment
+import com.example.quizz.ui.viewmodels.GameViewModel
 import com.example.quizz.ui.viewmodels.MainScreenViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,6 +41,7 @@ class MainActivity() : AppCompatActivity(){
     private val TAG = "MainActivity"
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModel<MainScreenViewModel>()
+    private val gameViewModel by viewModel<GameViewModel>()
     private var firstTimeStartedFlag = true
     private var username: String = ""
 
@@ -49,6 +52,22 @@ class MainActivity() : AppCompatActivity(){
         this.supportActionBar?.hide()
 
         viewModel.getUserFromRoomDatabase()
+
+        val token: Token? = gameViewModel.getTokenFromRoomDatabase()
+        CoroutineScope(Dispatchers.IO).launch {
+            if(token != null){
+                gameViewModel.checkIfTokenIsValid(token)
+            } else {
+                gameViewModel.getTokenFromApi()
+            }
+        }
+
+        gameViewModel.token.observe(this){
+            if(it != null) {
+                gameViewModel.saveTokenToRoomDatabase(it)
+            }
+        }
+
 
 
         viewModel.topThreePlayers.observe(this){
